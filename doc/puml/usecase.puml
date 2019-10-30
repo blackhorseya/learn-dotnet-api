@@ -1,0 +1,43 @@
+@startuml "use case"
+
+left to right direction
+
+actor guest as "Guest"
+actor user as "User"
+actor admin as "Admin"
+actor userDb as "Account DB" <<database>>
+actor sso as "SSO" <<service>>
+actor keyPool as "Key Pool" <<service>>
+
+rectangle "Web Api" {
+    admin -- user
+
+    usecase login as "Login"
+    guest -- (login)
+    (login) -- sso
+
+    usecase logout as "Logout"
+    user -- (logout)
+
+    usecase viewKeyStatus as "View Key Status"
+    user -- (viewKeyStatus)
+    (viewKeyStatus) -- userDb
+
+    usecase editKeyStatus as "Edit Key Status"
+    admin -- (editKeyStatus)
+    (editKeyStatus) -- userDb
+
+    usecase genKey as "Generate Key"
+    user -- (genKey)
+    (genKey) -- keyPool
+
+    usecase viewPermissions as "View Permissions"
+    admin -- (viewPermissions)
+    (viewPermissions) -- userDb
+
+    usecase editPermissions as "Edit Permissions"
+    admin -- (editPermissions)
+    (editPermissions) -- userDb
+}
+
+@enduml
