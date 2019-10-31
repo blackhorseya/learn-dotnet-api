@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Doggy.LearnNetCore.Domain.Contexts;
 using Doggy.LearnNetCore.WebService.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,8 +29,12 @@ namespace Doggy.LearnNetCore.WebService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options => options.Filters.Add(new ProducesAttribute("application/json")))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(options => options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.IgnoreNullValues = true);
+
+            services.AddDbContextPool<RbacContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("accountDb")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +51,7 @@ namespace Doggy.LearnNetCore.WebService
             }
 
             app.UseMiddleware<LoggerMiddleware>();
-            
+
             app.UseMvc();
         }
     }

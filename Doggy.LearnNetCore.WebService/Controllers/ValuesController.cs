@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Doggy.LearnNetCore.Domain.Contexts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doggy.LearnNetCore.WebService.Controllers
@@ -10,6 +11,13 @@ namespace Doggy.LearnNetCore.WebService.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly RbacContext _rbacContext;
+
+        public ValuesController(RbacContext rbacContext)
+        {
+            _rbacContext = rbacContext;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()

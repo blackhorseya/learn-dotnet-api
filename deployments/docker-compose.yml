@@ -3,9 +3,9 @@ version: '3'
 services:
   db:
     container_name: db
-    image: mcr.microsoft.com/mssql/server
+    image: mariadb
     ports:
-      - 1433:1433
+      - 3306:3306
     environment:
-      - "ACCEPT_EULA=Y"
-      - "SA_PASSWORD=1234jk"
+      MYSQL_ROOT_PASSWORD: 1234jk
+      MYSQL_DATABASE: accountDb
