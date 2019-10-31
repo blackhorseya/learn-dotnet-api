@@ -4,12 +4,12 @@ namespace Doggy.LearnNetCore.Domain.Entities
 {
     public class Role
     {
-        public int Id { get; set; }
-        
+        public int RoleId { get; set; }
+
         public string Name { get; set; }
-        
-        public List<RoleGroup> Groups { get; set; }
-        
-        public List<Permission> Permissions { get; set; }
+
+        public List<GroupRole> GroupRoles { get; set; }
+
+        public List<RolePermission> RolePermissions { get; set; }
     }
 }

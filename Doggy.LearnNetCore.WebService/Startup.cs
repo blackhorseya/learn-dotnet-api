@@ -28,13 +28,18 @@ namespace Doggy.LearnNetCore.WebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => options.Filters.Add(new ProducesAttribute("application/json")))
+            services.AddMvc(options =>
+                {
+                    // options.Filters.Add(new ProducesAttribute("application/json"));
+                    options.EnableEndpointRouting = false;
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddJsonOptions(options =>
                     options.JsonSerializerOptions.IgnoreNullValues = true);
 
             services.AddDbContextPool<RbacContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("accountDb")));
+                options.UseMySql(Configuration.GetConnectionString("AccountDb"),
+                    b => b.MigrationsAssembly("Doggy.LearnNetCore.WebService")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +55,7 @@ namespace Doggy.LearnNetCore.WebService
                 app.UseHsts();
             }
 
-            app.UseMiddleware<LoggerMiddleware>();
+            // app.UseMiddleware<LoggerMiddleware>();
 
             app.UseMvc();
         }

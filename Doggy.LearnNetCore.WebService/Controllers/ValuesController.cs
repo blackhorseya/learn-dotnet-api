@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Doggy.LearnNetCore.Domain.Contexts;
+using Doggy.LearnNetCore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doggy.LearnNetCore.WebService.Controllers
@@ -34,8 +35,13 @@ namespace Doggy.LearnNetCore.WebService.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post()
         {
+            _rbacContext.Roles.Add(entity: new Role
+            {
+                Name = "test",
+            });
+            _rbacContext.SaveChanges();
         }
 
         // PUT api/values/5

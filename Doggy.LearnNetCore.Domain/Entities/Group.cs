@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 namespace Doggy.LearnNetCore.Domain.Entities
 {
-    public class RoleGroup
+    public class Group
     {
-        public int Id { get; set; }
+        public int GroupId { get; set; }
         
         public string Name { get; set; }
         
-        public List<Role> Roles { get; set; }
+        public List<GroupRole> GroupRoles { get; set; }
     }
 }

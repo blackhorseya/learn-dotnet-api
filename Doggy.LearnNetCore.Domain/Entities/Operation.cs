@@ -4,10 +4,10 @@ namespace Doggy.LearnNetCore.Domain.Entities
 {
     public class Operation
     {
-        public int Id { get; set; }
+        public int OperationId { get; set; }
         
         public string Name { get; set; }
         
-        public List<Permission> Permissions { get; set; }
+        public List<PermissionOperation> PermissionOperations { get; set; }
     }
 }
