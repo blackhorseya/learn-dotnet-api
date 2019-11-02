@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Doggy.LearnNetCore.DataLayer
+namespace Doggy.Learning.Auth.Business
 {
     public class Class1
     {

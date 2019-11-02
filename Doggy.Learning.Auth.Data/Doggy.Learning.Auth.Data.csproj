@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Doggy.LearnNetCore.Domain\Doggy.LearnNetCore.Domain.csproj" />
+    <ProjectReference Include="..\Doggy.Learning.Auth.Domain\Doggy.Learning.Auth.Domain.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

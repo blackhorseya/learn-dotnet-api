@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Doggy.Learning.Auth.Domain\Doggy.Learning.Auth.Domain.csproj" />
+    <ProjectReference Include="..\Doggy.Learning.Auth.Business\Doggy.Learning.Auth.Business.csproj" />
+  </ItemGroup>
+
+</Project>
