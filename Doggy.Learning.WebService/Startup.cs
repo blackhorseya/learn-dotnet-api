@@ -30,8 +30,7 @@ namespace Doggy.Learning.WebService
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
 
             services.AddDbContextPool<AuthContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("auth"),
-                    b => b.MigrationsAssembly("Doggy.Learning.WebService")));
+                options.UseMySql(Configuration.GetConnectionString("auth")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
