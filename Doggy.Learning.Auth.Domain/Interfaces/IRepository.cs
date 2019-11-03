@@ -1,11 +1,19 @@
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Doggy.Learning.Auth.Data;
 
-namespace Doggy.Learning.Auth.Data
+namespace Doggy.Learning.Auth.Domain.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class, IEntity
     {
+        Task<List<T>> GetAllAsync();
         
+        Task<T> GetAsync(int id);
+        
+        Task<T> AddAsync(T entity);
+        
+        Task<T> UpdateAsync(T entity);
+        
+        Task<T> DeleteAsync(int id);
     }
 }
