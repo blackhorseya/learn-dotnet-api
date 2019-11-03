@@ -1,6 +1,6 @@
 using System;
 
-namespace Doggy.Learning.Auth.Data
+namespace Doggy.Learning.Auth.Domain.Interfaces
 {
     public interface IEntity
     {

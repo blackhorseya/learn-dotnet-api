@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Doggy.Learning.Auth.Data;
 
 namespace Doggy.Learning.Auth.Domain.Interfaces
 {

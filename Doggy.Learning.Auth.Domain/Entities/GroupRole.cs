@@ -1,5 +1,4 @@
 using System;
-using Doggy.Learning.Auth.Data;
 
 namespace Doggy.Learning.Auth.Domain.Entities
 {

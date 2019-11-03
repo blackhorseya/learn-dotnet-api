@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Doggy.Learning.Auth.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Doggy.Learning.Auth.Domain.Interfaces
