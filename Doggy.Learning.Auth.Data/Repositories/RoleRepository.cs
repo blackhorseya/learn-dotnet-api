@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using Doggy.Learning.Auth.Domain.Entities;
-using Doggy.Learning.Auth.Domain.Interfaces;
+using Doggy.Learning.Infrastructure.Interfaces;
 
 namespace Doggy.Learning.Auth.Data.Repositories
 {

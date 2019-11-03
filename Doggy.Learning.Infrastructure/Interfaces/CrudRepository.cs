@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Doggy.Learning.Auth.Domain.Interfaces
+namespace Doggy.Learning.Infrastructure.Interfaces
 {
     public abstract class CrudRepository<TEntity, TContext> : IRepository<TEntity>
         where TEntity : class, IEntity

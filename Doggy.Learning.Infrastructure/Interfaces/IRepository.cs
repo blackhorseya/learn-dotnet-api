@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Doggy.Learning.Auth.Domain.Interfaces
+namespace Doggy.Learning.Infrastructure.Interfaces
 {
     public interface IRepository<T> where T : class, IEntity
     {

@@ -1,7 +1,5 @@
-using Doggy.Learning.Auth.Domain.Helpers;
-using Doggy.Learning.Auth.Domain.Interfaces;
+using Doggy.Learning.Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Doggy.Learning.Auth.Domain.Entities
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Doggy.Learning.Auth.Domain.Interfaces
+namespace Doggy.Learning.Infrastructure.Interfaces
 {
     public interface ITimestampedEntity
     {
