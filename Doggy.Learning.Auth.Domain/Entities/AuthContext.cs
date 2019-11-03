@@ -1,4 +1,7 @@
+using Doggy.Learning.Auth.Domain.Helpers;
+using Doggy.Learning.Auth.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Doggy.Learning.Auth.Domain.Entities
 {
@@ -20,6 +23,12 @@ namespace Doggy.Learning.Auth.Domain.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Group>().UseTimestampedProperty();
+            modelBuilder.Entity<Role>().UseTimestampedProperty();
+            modelBuilder.Entity<Permission>().UseTimestampedProperty();
+            modelBuilder.Entity<Module>().UseTimestampedProperty();
+            modelBuilder.Entity<Operation>().UseTimestampedProperty();
+            
             modelBuilder.Entity<ModulePermission>().HasKey(mp => new {mp.ModuleId, mp.PermissionId});
             modelBuilder.Entity<ModulePermission>()
                 .HasOne(mp => mp.Module)

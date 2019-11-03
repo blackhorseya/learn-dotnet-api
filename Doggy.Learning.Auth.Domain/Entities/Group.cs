@@ -8,9 +8,9 @@ namespace Doggy.Learning.Auth.Domain.Entities
     {
         public int Id { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
         
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         
         public string Name { get; set; }
 
