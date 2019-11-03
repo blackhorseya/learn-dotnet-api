@@ -50,7 +50,7 @@ namespace Doggy.Learning.Auth.Domain.Entities
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.RoleId);
 
-            modelBuilder.Entity<GroupRole>().HasKey(gr => new {gr.RoleId, gr.GroupId});
+            modelBuilder.Entity<GroupRole>().HasKey(gr => new {gr.RoleId, GroupId = gr.GroupId});
             modelBuilder.Entity<GroupRole>()
                 .HasOne(gr => gr.Role)
                 .WithMany(r => r.GroupRoles)
