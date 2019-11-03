@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,8 @@ namespace Doggy.Learning.WebService
 
             services.AddDbContextPool<AuthContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("auth")));
+
+            services.AddScoped<RoleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
