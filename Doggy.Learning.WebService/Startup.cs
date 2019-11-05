@@ -39,7 +39,8 @@ namespace Doggy.Learning.WebService
 
             #endregion
 
-            services.AddDbContextPool<AuthContext>(options => options.UseMySql(appSettings.ConnectionString));
+            services.AddDbContextPool<AuthContext>(options =>
+                options.UseLazyLoadingProxies().UseMySql(appSettings.ConnectionString));
 
             #region auth jwt
 

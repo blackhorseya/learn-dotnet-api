@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doggy.Learning.Auth.Domain.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20191103050749_InitialCreate")]
+    [Migration("20191105142637_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,25 +163,25 @@ namespace Doggy.Learning.Auth.Domain.Migrations
 
             modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.GroupRole", b =>
                 {
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
-                        .WithMany("GroupRoles")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Group", "Group")
+                        .WithMany("Roles")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Group", "Group")
-                        .WithMany("GroupRoles")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
+                        .WithMany("Groups")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.ModulePermission", b =>
                 {
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Module", "Module")
                         .WithMany("ModulePermissions")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Module", "Module")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
                         .WithMany("ModulePermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -189,12 +189,12 @@ namespace Doggy.Learning.Auth.Domain.Migrations
 
             modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.PermissionOperation", b =>
                 {
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Operation", "Operation")
                         .WithMany("PermissionOperations")
                         .HasForeignKey("OperationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Operation", "Operation")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
                         .WithMany("PermissionOperations")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -202,12 +202,12 @@ namespace Doggy.Learning.Auth.Domain.Migrations
 
             modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.RolePermission", b =>
                 {
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
                         .WithMany("RolePermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
                         .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);

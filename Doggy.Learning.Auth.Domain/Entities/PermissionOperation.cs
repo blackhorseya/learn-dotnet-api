@@ -4,10 +4,10 @@ namespace Doggy.Learning.Auth.Domain.Entities
     {
         public int PermissionId { get; set; }
         
-        public Permission Permission { get; set; }
+        public virtual Permission Permission { get; set; }
 
         public int OperationId { get; set; }
         
-        public Operation Operation { get; set; }
+        public virtual Operation Operation { get; set; }
     }
 }

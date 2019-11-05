@@ -104,15 +104,15 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_ModulePermission", x => new { x.ModuleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_ModulePermission_Permissions_ModuleId",
+                        name: "FK_ModulePermission_Modules_ModuleId",
                         column: x => x.ModuleId,
-                        principalTable: "Permissions",
+                        principalTable: "Modules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ModulePermission_Modules_PermissionId",
+                        name: "FK_ModulePermission_Permissions_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "Modules",
+                        principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -128,15 +128,15 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_PermissionOperation", x => new { x.OperationId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_PermissionOperation_Permissions_OperationId",
+                        name: "FK_PermissionOperation_Operations_OperationId",
                         column: x => x.OperationId,
-                        principalTable: "Permissions",
+                        principalTable: "Operations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PermissionOperation_Operations_PermissionId",
+                        name: "FK_PermissionOperation_Permissions_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "Operations",
+                        principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -152,15 +152,15 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_GroupRole", x => new { x.RoleId, x.GroupId });
                     table.ForeignKey(
-                        name: "FK_GroupRole_Roles_GroupId",
+                        name: "FK_GroupRole_Groups_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Roles",
+                        principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupRole_Groups_RoleId",
+                        name: "FK_GroupRole_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Groups",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -176,15 +176,15 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_RolePermission", x => new { x.RoleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_RolePermission_Roles_PermissionId",
+                        name: "FK_RolePermission_Permissions_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "Roles",
+                        principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RolePermission_Permissions_RoleId",
+                        name: "FK_RolePermission_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Permissions",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -234,10 +234,10 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 name: "Operations");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Permissions");
 
             migrationBuilder.DropTable(
-                name: "Permissions");
+                name: "Roles");
         }
     }
 }

@@ -14,6 +14,6 @@ namespace Doggy.Learning.Auth.Domain.Entities
 
         public string Name { get; set; }
         
-        public List<ModulePermission> ModulePermissions { get; set; }
+        public virtual List<ModulePermission> ModulePermissions { get; set; }
     }
 }

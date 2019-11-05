@@ -8,7 +8,7 @@ namespace Doggy.Learning.Infrastructure.Interfaces
         where TEntity : class, IEntity
         where TContext : DbContext
     {
-        private readonly TContext _context;
+        protected readonly TContext _context;
 
         protected CrudRepository(TContext context)
         {

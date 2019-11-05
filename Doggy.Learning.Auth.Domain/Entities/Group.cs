@@ -15,8 +15,11 @@ namespace Doggy.Learning.Auth.Domain.Entities
         
         public string Name { get; set; }
 
-        public List<GroupRole> GroupRoles { get; set; }
+        public virtual List<GroupRole> Roles { get; set; }
 
-        public List<Role> Roles => GroupRoles?.Select(gr => gr.Role).ToList();
+        public List<Role> GetRoles()
+        {
+            return Roles?.Where(gr => gr.GroupId == Id).Select(gr => gr.Role).ToList();
+        }
     }
 }

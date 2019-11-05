@@ -10,7 +10,9 @@ namespace Doggy.Learning.Auth.Domain.Interfaces
         Task<User> Authenticate(string username, string password);
         
         Task<User> FindByIdAsync(int id);
-
+        
+        Task<User> FindByNameAsync(string name);
+        
         Task<List<User>> FindAllAsync();
 
         Task<User> CreateUserAsync(Group group);

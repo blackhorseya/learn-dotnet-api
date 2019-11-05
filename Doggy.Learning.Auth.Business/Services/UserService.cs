@@ -33,24 +33,14 @@ namespace Doggy.Learning.Auth.Business.Services
             if (password == null) throw new ArgumentNullException(nameof(password));
 
             // todo: verify username and password
-
-            if (!int.TryParse(username, out var id))
-                return null;
-
-            var user = await FindByIdAsync(id);
-            if (user == null) throw new ArgumentNullException(nameof(user));
+            var user = await FindByNameAsync(username);
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Name.ToString()),
-                    new Claim(ClaimTypes.Role, user.GetRolesString())
-                }),
+                Subject = user.GetClaimsIdentity(),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
@@ -70,7 +60,20 @@ namespace Doggy.Learning.Auth.Business.Services
             {
                 Id = group.Id,
                 Name = group.Name,
-                Roles = group.Roles,
+                Roles = group.GetRoles(),
+            };
+        }
+
+        public async Task<User> FindByNameAsync(string name)
+        {
+            var group = await _groupRepo.FindByNameAsync(name);
+            if (group == null) throw new ArgumentNullException(nameof(group));
+
+            return new User
+            {
+                Id = group.Id,
+                Name = group.Name,
+                Roles = group.GetRoles(),
             };
         }
 

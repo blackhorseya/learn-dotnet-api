@@ -25,13 +25,18 @@ namespace Doggy.Learning.WebService.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] AuthenticateRequest request)
+        public async Task<ActionResult<UserResponse>> Authenticate([FromBody] AuthenticateRequest request)
         {
             var user = await _userService.Authenticate(request.Username, request.Password);
             if (user == null)
                 return BadRequest(new {message = "Username or password is incorrect"});
 
-            return Ok(user);
+            return Ok(new UserResponse
+            {
+                Name = user.Name,
+                Roles = user.GetRolesName(),
+                Token = user.Token,
+            });
         }
 
         [HttpGet]
@@ -44,6 +49,7 @@ namespace Doggy.Learning.WebService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponse>> Get(int id)
         {
+            // todo: fix it
             if (!int.TryParse(User.Identity.Name, out var userId))
                 return BadRequest();
 
@@ -58,7 +64,7 @@ namespace Doggy.Learning.WebService.Controllers
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<UserResponse>> Post(UserRequest request)
         {
