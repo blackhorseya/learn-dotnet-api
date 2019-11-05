@@ -33,17 +33,17 @@ namespace Doggy.Learning.WebService
 
             #region injection settings
 
-            var authSettingsSection = Configuration.GetSection(nameof(AuthSettings));
-            services.Configure<AuthSettings>(authSettingsSection);
-            var authSettings = authSettingsSection.Get<AuthSettings>();
+            var authSettingsSection = Configuration.GetSection(nameof(AppSettings));
+            services.Configure<AppSettings>(authSettingsSection);
+            var appSettings = authSettingsSection.Get<AppSettings>();
 
             #endregion
 
-            services.AddDbContextPool<AuthContext>(options => options.UseMySql(authSettings.ConnectionString));
+            services.AddDbContextPool<AuthContext>(options => options.UseMySql(appSettings.ConnectionString));
 
             #region auth jwt
 
-            var key = Encoding.ASCII.GetBytes(authSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,7 +66,8 @@ namespace Doggy.Learning.WebService
 
             #region injection repositories
 
-            services.AddScoped<RoleRepository>();
+            services.AddScoped<GroupRepositoryBase, GroupRepository>();
+            services.AddScoped<RoleRepositoryBase, RoleRepository>();
 
             #endregion
 

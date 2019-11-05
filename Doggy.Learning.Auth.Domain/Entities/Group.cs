@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Doggy.Learning.Infrastructure.Interfaces;
 
 namespace Doggy.Learning.Auth.Domain.Entities
@@ -15,5 +16,7 @@ namespace Doggy.Learning.Auth.Domain.Entities
         public string Name { get; set; }
 
         public List<GroupRole> GroupRoles { get; set; }
+
+        public List<Role> Roles => GroupRoles?.Select(gr => gr.Role).ToList();
     }
 }

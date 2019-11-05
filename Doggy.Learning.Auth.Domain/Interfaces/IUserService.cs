@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Models;
 
 namespace Doggy.Learning.Auth.Domain.Interfaces
@@ -8,5 +10,9 @@ namespace Doggy.Learning.Auth.Domain.Interfaces
         Task<User> Authenticate(string username, string password);
         
         Task<User> FindByIdAsync(int id);
+
+        Task<List<User>> FindAllAsync();
+
+        Task<User> CreateUserAsync(Group group);
     }
 }

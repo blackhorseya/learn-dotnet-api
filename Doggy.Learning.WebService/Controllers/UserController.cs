@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
-using Doggy.Learning.Auth.Domain.Models;
 using Doggy.Learning.WebService.Models;
+using Doggy.Learning.WebService.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +14,12 @@ namespace Doggy.Learning.WebService.Controllers
     [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly RoleRepository _roleRepository;
+        private readonly RoleRepositoryBase _roleRepo;
         private readonly IUserService _userService;
 
-        public UserController(RoleRepository roleRepository, IUserService userService)
+        public UserController(RoleRepositoryBase roleRepo, IUserService userService)
         {
-            _roleRepository = roleRepository;
+            _roleRepo = roleRepo;
             _userService = userService;
         }
 
@@ -30,7 +29,7 @@ namespace Doggy.Learning.WebService.Controllers
         {
             var user = await _userService.Authenticate(request.Username, request.Password);
             if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new {message = "Username or password is incorrect"});
 
             return Ok(user);
         }
@@ -39,25 +38,41 @@ namespace Doggy.Learning.WebService.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<IEnumerable<Role>>> Get()
         {
-            return await _roleRepository.GetAllAsync();
+            return await _roleRepo.GetAllAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Get(int id)
+        public async Task<ActionResult<UserResponse>> Get(int id)
         {
             if (!int.TryParse(User.Identity.Name, out var userId))
                 return BadRequest();
-            
+
             if (id != userId && !User.IsInRole("admin"))
                 return Forbid();
-            
-            return await _userService.FindByIdAsync(id);
+
+            var group = await _userService.FindByIdAsync(id);
+
+            return new UserResponse
+            {
+                Name = group.Name,
+            };
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<Role>> Post(Role entity)
+        public async Task<ActionResult<UserResponse>> Post(UserRequest request)
         {
-            return await _roleRepository.AddAsync(entity);
+            var entity = new Group
+            {
+                Name = request.Name,
+            };
+            
+            var result = await _userService.CreateUserAsync(entity);
+
+            return new UserResponse
+            {
+                Name = result.Name,
+            };
         }
 
         [HttpPut("{id}")]
@@ -68,14 +83,14 @@ namespace Doggy.Learning.WebService.Controllers
                 return BadRequest();
             }
 
-            await _roleRepository.UpdateAsync(entity);
+            await _roleRepo.UpdateAsync(entity);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Role>> Delete(int id)
         {
-            var entity = await _roleRepository.DeleteAsync(id);
+            var entity = await _roleRepo.DeleteAsync(id);
             if (entity == null)
             {
                 return NotFound();

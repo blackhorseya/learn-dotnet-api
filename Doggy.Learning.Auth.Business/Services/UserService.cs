@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,13 +16,15 @@ namespace Doggy.Learning.Auth.Business.Services
 {
     public class UserService : IUserService
     {
-        private readonly AuthSettings _authSettings;
-        private readonly RoleRepository _roleRepo;
+        private readonly AppSettings _appSettings;
+        private readonly RoleRepositoryBase _roleRepo;
+        private readonly GroupRepositoryBase _groupRepo;
 
-        public UserService(IOptions<AuthSettings> authSettings, RoleRepository roleRepo)
+        public UserService(IOptions<AppSettings> authSettings, RoleRepositoryBase roleRepo, GroupRepositoryBase groupRepo)
         {
-            _authSettings = authSettings.Value;
+            _appSettings = authSettings.Value;
             _roleRepo = roleRepo;
+            _groupRepo = groupRepo;
         }
 
         public async Task<User> Authenticate(string username, string password)
@@ -39,13 +42,14 @@ namespace Doggy.Learning.Auth.Business.Services
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_authSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Name.ToString()),
+                    new Claim(ClaimTypes.Role, user.GetRolesString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
@@ -59,13 +63,30 @@ namespace Doggy.Learning.Auth.Business.Services
 
         public async Task<User> FindByIdAsync(int id)
         {
-            var role = await _roleRepo.GetAsync(id);
-            if (role == null) throw new ArgumentNullException(nameof(role));
+            Group group = await _groupRepo.GetAsync(id);
+            if (group == null) throw new ArgumentNullException(nameof(group));
 
             return new User
             {
-                Id = role.Id,
-                Role = role.Name,
+                Id = group.Id,
+                Name = group.Name,
+                Roles = group.Roles,
+            };
+        }
+
+        public async Task<List<User>> FindAllAsync()
+        {
+            // todo: implement it 
+            return null;
+        }
+
+        public async Task<User> CreateUserAsync(Group group)
+        {
+            var result = await _groupRepo.AddAsync(group);
+            return new User
+            {
+                Id = result.Id,
+                Name = result.Name,
             };
         }
     }

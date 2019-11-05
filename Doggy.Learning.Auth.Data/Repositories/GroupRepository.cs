@@ -4,9 +4,9 @@ using Doggy.Learning.Infrastructure.Interfaces;
 
 namespace Doggy.Learning.Auth.Data.Repositories
 {
-    public class RoleRepository : RoleRepositoryBase
+    public class GroupRepository : GroupRepositoryBase 
     {
-        public RoleRepository(AuthContext context) : base(context)
+        public GroupRepository(AuthContext context) : base(context)
         {
         }
     }
