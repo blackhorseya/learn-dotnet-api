@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,8 +80,15 @@ namespace Doggy.Learning.Auth.Business.Services
 
         public async Task<List<User>> FindAllAsync()
         {
-            // todo: implement it 
-            return null;
+            var groups = await _groupRepo.GetAllAsync();
+            var users = groups.Select(g => new User
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Roles = g.GetRoles(),
+            }).ToList();
+            
+            return users;
         }
 
         public async Task<User> CreateUserAsync(Group group)

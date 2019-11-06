@@ -30,7 +30,7 @@ namespace Doggy.Learning.Auth.Domain.Models
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, Name), 
-                new Claim(ClaimTypes.Sid, Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, Id.ToString()),
             };
             claims.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
 

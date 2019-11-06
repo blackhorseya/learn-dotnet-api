@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
@@ -33,6 +35,7 @@ namespace Doggy.Learning.WebService.Controllers
 
             return Ok(new UserResponse
             {
+                Id = user.Id,
                 Name = user.Name,
                 Roles = user.GetRolesName(),
                 Token = user.Token,
@@ -41,29 +44,38 @@ namespace Doggy.Learning.WebService.Controllers
 
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<IEnumerable<Role>>> Get()
+        public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
         {
-            return await _roleRepo.GetAllAsync();
+            var users = await _userService.FindAllAsync();
+            var results = users.Select(u => new UserResponse
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Roles = u.GetRolesName(),
+            }).ToList();
+
+            return results;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponse>> Get(int id)
         {
-            // todo: fix it
-            if (!int.TryParse(User.Identity.Name, out var userId))
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var userid))
                 return BadRequest();
-
-            if (id != userId && !User.IsInRole("admin"))
+                
+            if (id != userid && !User.IsInRole("admin"))
                 return Forbid();
 
-            var group = await _userService.FindByIdAsync(id);
+            var user = await _userService.FindByIdAsync(id);
 
             return new UserResponse
             {
-                Name = group.Name,
+                Id = user.Id,
+                Name = user.Name,
+                Roles = user.GetRolesName(),
             };
         }
-
+        
         [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<UserResponse>> Post(UserRequest request)
