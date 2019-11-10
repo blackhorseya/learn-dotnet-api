@@ -4,6 +4,7 @@ using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Helpers;
+using Doggy.Learning.WebService.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,10 +28,6 @@ namespace Doggy.Learning.WebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-            services.AddControllers()
-                .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
-
             #region injection settings
 
             var authSettingsSection = Configuration.GetSection(nameof(AppSettings));
@@ -38,6 +35,10 @@ namespace Doggy.Learning.WebService
             var appSettings = authSettingsSection.Get<AppSettings>();
 
             #endregion
+
+            services.AddCors();
+            services.AddControllers(options => { options.Filters.Add(new HeaderFilter(appSettings.RequiredHeaders)); })
+                .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
 
             services.AddDbContextPool<AuthContext>(options =>
                 options.UseLazyLoadingProxies().UseMySql(appSettings.ConnectionString));
