@@ -3,8 +3,8 @@ using Doggy.Learning.Auth.Business.Services;
 using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
+using Doggy.Learning.Infrastructure.Filters;
 using Doggy.Learning.Infrastructure.Helpers;
-using Doggy.Learning.WebService.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,13 +35,21 @@ namespace Doggy.Learning.WebService
             var appSettings = authSettingsSection.Get<AppSettings>();
 
             #endregion
+            
+            #region swagger settings
+
+            services.AddCustomSwagger();
+            
+            #endregion
 
             services.AddCors();
-            services.AddControllers(options => { options.Filters.Add(new HeaderFilter(appSettings.RequiredHeaders)); })
+            services.AddControllers(options => { options.Filters.Add<HeaderFilter>(); })
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
 
+            #region injection db context
             services.AddDbContextPool<AuthContext>(options =>
                 options.UseLazyLoadingProxies().UseMySql(appSettings.ConnectionString));
+            #endregion
 
             #region auth jwt
 
@@ -88,7 +96,10 @@ namespace Doggy.Learning.WebService
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseCustomSwagger();
 
             app.UseCors(x => x
                 .AllowAnyOrigin()

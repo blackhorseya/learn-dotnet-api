@@ -6,10 +6,8 @@
 
     <ItemGroup>
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.6" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Filters" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.0.0-rc8" />
     </ItemGroup>
 
 </Project>
