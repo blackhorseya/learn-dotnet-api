@@ -5,6 +5,10 @@
     <ProjectReference Include="..\Doggy.Learning.Auth.Data\Doggy.Learning.Auth.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>

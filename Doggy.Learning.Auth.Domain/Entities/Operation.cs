@@ -1,13 +1,19 @@
+using System;
 using System.Collections.Generic;
+using Doggy.Learning.Infrastructure.Interfaces;
 
 namespace Doggy.Learning.Auth.Domain.Entities
 {
-    public class Operation
+    public class Operation : IEntity
     {
-        public int OperationId { get; set; }
+        public int Id { get; set; }
         
+        public DateTime CreatedAt { get; set; }
+        
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
         public string Name { get; set; }
         
-        public List<PermissionOperation> PermissionOperations { get; set; }
+        public virtual List<PermissionOperation> PermissionOperations { get; set; }
     }
 }

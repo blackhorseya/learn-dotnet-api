@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Doggy.Learning.Auth.Domain.Migrations
@@ -11,65 +12,85 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    GroupId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.GroupId);
+                    table.PrimaryKey("PK_Groups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Modules",
                 columns: table => new
                 {
-                    ModuleId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Modules", x => x.ModuleId);
+                    table.PrimaryKey("PK_Modules", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Operations",
                 columns: table => new
                 {
-                    OperationId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Operations", x => x.OperationId);
+                    table.PrimaryKey("PK_Operations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Permissions",
                 columns: table => new
                 {
-                    PermissionId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Permissions", x => x.PermissionId);
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
-                    RoleId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.RoleId);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,16 +104,16 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_ModulePermission", x => new { x.ModuleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_ModulePermission_Permissions_ModuleId",
+                        name: "FK_ModulePermission_Modules_ModuleId",
                         column: x => x.ModuleId,
-                        principalTable: "Permissions",
-                        principalColumn: "PermissionId",
+                        principalTable: "Modules",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ModulePermission_Modules_PermissionId",
+                        name: "FK_ModulePermission_Permissions_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -107,16 +128,16 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_PermissionOperation", x => new { x.OperationId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_PermissionOperation_Permissions_OperationId",
+                        name: "FK_PermissionOperation_Operations_OperationId",
                         column: x => x.OperationId,
-                        principalTable: "Permissions",
-                        principalColumn: "PermissionId",
+                        principalTable: "Operations",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PermissionOperation_Operations_PermissionId",
+                        name: "FK_PermissionOperation_Permissions_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "Operations",
-                        principalColumn: "OperationId",
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -131,16 +152,16 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_GroupRole", x => new { x.RoleId, x.GroupId });
                     table.ForeignKey(
-                        name: "FK_GroupRole_Roles_GroupId",
+                        name: "FK_GroupRole_Groups_GroupId",
                         column: x => x.GroupId,
-                        principalTable: "Roles",
-                        principalColumn: "RoleId",
+                        principalTable: "Groups",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupRole_Groups_RoleId",
+                        name: "FK_GroupRole_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Groups",
-                        principalColumn: "GroupId",
+                        principalTable: "Roles",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -155,16 +176,16 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 {
                     table.PrimaryKey("PK_RolePermission", x => new { x.RoleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_RolePermission_Roles_PermissionId",
+                        name: "FK_RolePermission_Permissions_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "Roles",
-                        principalColumn: "RoleId",
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RolePermission_Permissions_RoleId",
+                        name: "FK_RolePermission_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Permissions",
-                        principalColumn: "PermissionId",
+                        principalTable: "Roles",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -213,10 +234,10 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                 name: "Operations");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Permissions");
 
             migrationBuilder.DropTable(
-                name: "Permissions");
+                name: "Roles");
         }
     }
 }
