@@ -10,3 +10,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 1234jk
       MYSQL_DATABASE: accountDb
+  api:
+    container_name: api
+    image: blackhorseya/learning-netcore:v1.1
+    build:
+      context: ../src
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+    volumes:
+      - ./config:/app/Config
