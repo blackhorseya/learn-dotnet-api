@@ -13,5 +13,4 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine AS runtime
 WORKDIR /app
 COPY --from=builder /app/out ./
-VOLUME [ "./Config" ]
 ENTRYPOINT ["dotnet", "Doggy.Learning.WebService.dll"]
