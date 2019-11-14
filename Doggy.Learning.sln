@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.WebService", "Doggy.Learning.WebService\Doggy.Learning.WebService.csproj", "{846D5C94-49BB-41B6-9A1B-A21A9ED3091F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.WebService", "src/Doggy.Learning.WebService\Doggy.Learning.WebService.csproj", "{846D5C94-49BB-41B6-9A1B-A21A9ED3091F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Auth.Data", "Doggy.Learning.Auth.Data\Doggy.Learning.Auth.Data.csproj", "{D23B7C68-67D9-4146-A987-5B1E14B585BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Auth.Data", "src/Doggy.Learning.Auth.Data\Doggy.Learning.Auth.Data.csproj", "{D23B7C68-67D9-4146-A987-5B1E14B585BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Auth.Domain", "Doggy.Learning.Auth.Domain\Doggy.Learning.Auth.Domain.csproj", "{6D3A8F2C-E0A9-4D55-82B8-DC74B7965BD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Auth.Domain", "src/Doggy.Learning.Auth.Domain\Doggy.Learning.Auth.Domain.csproj", "{6D3A8F2C-E0A9-4D55-82B8-DC74B7965BD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Auth.Business", "Doggy.Learning.Auth.Business\Doggy.Learning.Auth.Business.csproj", "{5F76E452-A8B2-48C1-8EAF-1FA1C7D5AF58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Auth.Business", "src/Doggy.Learning.Auth.Business\Doggy.Learning.Auth.Business.csproj", "{5F76E452-A8B2-48C1-8EAF-1FA1C7D5AF58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Infrastructure", "Doggy.Learning.Infrastructure\Doggy.Learning.Infrastructure.csproj", "{2FC4E848-FB96-4A7A-AF9F-61D776B20C07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doggy.Learning.Infrastructure", "src/Doggy.Learning.Infrastructure\Doggy.Learning.Infrastructure.csproj", "{2FC4E848-FB96-4A7A-AF9F-61D776B20C07}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domains", "Domains", "{BDB9FBF0-3727-43BD-A738-5718D1036CDB}"
 EndProject
