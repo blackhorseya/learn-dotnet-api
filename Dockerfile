@@ -3,11 +3,11 @@ WORKDIR /app
 EXPOSE 80
 
 COPY ./*.sln .
-COPY */*.csproj ./
-RUN for file in $(ls *.csproj); do mkdir -p ${file%.*} && mv $file ${file%.*}; done
-RUN dotnet restore
+COPY ./src/*/*.csproj ./
+RUN for file in $(ls *.csproj); do mkdir -p src/${file%.*} && mv $file src/${file%.*}; done
+RUN dotnet restore ./src/Doggy.Learning.WebService
 
-COPY . ./
+COPY ./src ./src
 RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine AS runtime

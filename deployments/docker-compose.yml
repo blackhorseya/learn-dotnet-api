@@ -12,10 +12,10 @@ services:
       MYSQL_DATABASE: accountDb
   api:
     container_name: api
-    image: blackhorseya/learning-netcore:v1.1
+    image: blackhorseya/learning-netcore:latest
     restart: always
     build:
-      context: ../src
+      context: ../
       dockerfile: Dockerfile
     ports:
       - 8080:80
