@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doggy.Learning.Auth.Domain.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20191105142637_InitialCreate")]
+    [Migration("20191115130802_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.GroupRole", b =>
+            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.GroupRoleMap", b =>
                 {
                     b.Property<int>("RoleId");
 
@@ -47,7 +47,7 @@ namespace Doggy.Learning.Auth.Domain.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("GroupRole");
+                    b.ToTable("GroupRoleMap");
                 });
 
             modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.Module", b =>
@@ -68,68 +68,6 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                     b.ToTable("Modules");
                 });
 
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.ModulePermission", b =>
-                {
-                    b.Property<int>("ModuleId");
-
-                    b.Property<int>("PermissionId");
-
-                    b.HasKey("ModuleId", "PermissionId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("ModulePermission");
-                });
-
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.Operation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Operations");
-                });
-
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.Permission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.PermissionOperation", b =>
-                {
-                    b.Property<int>("OperationId");
-
-                    b.Property<int>("PermissionId");
-
-                    b.HasKey("OperationId", "PermissionId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("PermissionOperation");
-                });
-
             modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -148,20 +86,51 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.RolePermission", b =>
+            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.RoleModuleMap", b =>
                 {
                     b.Property<int>("RoleId");
 
-                    b.Property<int>("PermissionId");
+                    b.Property<int>("ModuleId");
 
-                    b.HasKey("RoleId", "PermissionId");
+                    b.HasKey("RoleId", "ModuleId");
 
-                    b.HasIndex("PermissionId");
+                    b.HasIndex("ModuleId");
 
-                    b.ToTable("RolePermission");
+                    b.ToTable("RoleModuleMap");
                 });
 
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.GroupRole", b =>
+            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.RoleServiceMap", b =>
+                {
+                    b.Property<int>("RoleId");
+
+                    b.Property<int>("ServiceId");
+
+                    b.HasKey("RoleId", "ServiceId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("RoleServiceMap");
+                });
+
+            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.GroupRoleMap", b =>
                 {
                     b.HasOne("Doggy.Learning.Auth.Domain.Entities.Group", "Group")
                         .WithMany("Roles")
@@ -174,42 +143,29 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.ModulePermission", b =>
+            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.RoleModuleMap", b =>
                 {
                     b.HasOne("Doggy.Learning.Auth.Domain.Entities.Module", "Module")
-                        .WithMany("ModulePermissions")
+                        .WithMany("Roles")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
-                        .WithMany("ModulePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.PermissionOperation", b =>
-                {
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Operation", "Operation")
-                        .WithMany("PermissionOperations")
-                        .HasForeignKey("OperationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
-                        .WithMany("PermissionOperations")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.RolePermission", b =>
-                {
-                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
-                        .WithMany("RolePermissions")
+                        .WithMany()
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Doggy.Learning.Auth.Domain.Entities.RoleServiceMap", b =>
+                {
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
+                        .WithMany("Services")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Doggy.Learning.Auth.Domain.Entities.Service", "Service")
+                        .WithMany("Roles")
+                        .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -75,46 +75,5 @@ namespace Doggy.Learning.WebService.Controllers
                 Roles = user.GetRolesName(),
             };
         }
-        
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        public async Task<ActionResult<UserResponse>> Post(UserRequest request)
-        {
-            var entity = new Group
-            {
-                Name = request.Name,
-            };
-            
-            var result = await _userService.CreateUserAsync(entity);
-
-            return new UserResponse
-            {
-                Name = result.Name,
-            };
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Role entity)
-        {
-            if (entity == null || id != entity.Id)
-            {
-                return BadRequest();
-            }
-
-            await _roleRepo.UpdateAsync(entity);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Role>> Delete(int id)
-        {
-            var entity = await _roleRepo.DeleteAsync(id);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-
-            return entity;
-        }
     }
 }

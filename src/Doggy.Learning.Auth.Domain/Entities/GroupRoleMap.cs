@@ -1,6 +1,6 @@
 namespace Doggy.Learning.Auth.Domain.Entities
 {
-    public class GroupRole
+    public class GroupRoleMap
     {
         public int GroupId { get; set; }
         

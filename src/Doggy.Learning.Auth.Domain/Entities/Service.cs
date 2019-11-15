@@ -4,16 +4,12 @@ using Doggy.Learning.Infrastructure.Interfaces;
 
 namespace Doggy.Learning.Auth.Domain.Entities
 {
-    public class Module : IEntity
+    public class Service : IEntity
     {
-        public int Id { get; set; }
-        
         public DateTime CreatedAt { get; set; }
-        
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
+        public DateTime UpdatedAt { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        
-        public virtual List<RoleModuleMap> Roles { get; set; }
+        public virtual List<RoleServiceMap> Roles { get; set; }
     }
 }

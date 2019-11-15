@@ -9,11 +9,9 @@ namespace Doggy.Learning.Auth.Domain.Entities
 
         public DbSet<Role> Roles { get; set; }
 
-        public DbSet<Permission> Permissions { get; set; }
-
         public DbSet<Module> Modules { get; set; }
-
-        public DbSet<Operation> Operations { get; set; }
+        
+        public DbSet<Service> Services { get; set; }
 
         public AuthContext(DbContextOptions options) : base(options)
         {
@@ -23,49 +21,12 @@ namespace Doggy.Learning.Auth.Domain.Entities
         {
             modelBuilder.Entity<Group>().UseTimestampedProperty();
             modelBuilder.Entity<Role>().UseTimestampedProperty();
-            modelBuilder.Entity<Permission>().UseTimestampedProperty();
             modelBuilder.Entity<Module>().UseTimestampedProperty();
-            modelBuilder.Entity<Operation>().UseTimestampedProperty();
+            modelBuilder.Entity<Service>().UseTimestampedProperty();
             
-            modelBuilder.Entity<ModulePermission>().HasKey(mp => new {mp.ModuleId, mp.PermissionId});
-            // modelBuilder.Entity<ModulePermission>()
-            //     .HasOne(mp => mp.Module)
-            //     .WithMany(m => m.ModulePermissions)
-            //     .HasForeignKey(mp => mp.PermissionId);
-            // modelBuilder.Entity<ModulePermission>()
-            //     .HasOne(mp => mp.Permission)
-            //     .WithMany(p => p.ModulePermissions)
-            //     .HasForeignKey(mp => mp.ModuleId);
-
-            modelBuilder.Entity<PermissionOperation>().HasKey(po => new {po.OperationId, po.PermissionId});
-            // modelBuilder.Entity<PermissionOperation>()
-            //     .HasOne(po => po.Operation)
-            //     .WithMany(o => o.PermissionOperations)
-            //     .HasForeignKey(po => po.PermissionId);
-            // modelBuilder.Entity<PermissionOperation>()
-            //     .HasOne(po => po.Permission)
-            //     .WithMany(p => p.PermissionOperations)
-            //     .HasForeignKey(po => po.OperationId);
-
-            modelBuilder.Entity<RolePermission>().HasKey(rp => new {rp.RoleId, rp.PermissionId});
-            // modelBuilder.Entity<RolePermission>()
-            //     .HasOne(rp => rp.Role)
-            //     .WithMany(r => r.RolePermissions)
-            //     .HasForeignKey(rp => rp.PermissionId);
-            // modelBuilder.Entity<RolePermission>()
-            //     .HasOne(rp => rp.Permission)
-            //     .WithMany(p => p.RolePermissions)
-            //     .HasForeignKey(rp => rp.RoleId);
-
-            modelBuilder.Entity<GroupRole>().HasKey(gr => new {gr.RoleId, GroupId = gr.GroupId});
-            // modelBuilder.Entity<GroupRole>()
-            //     .HasOne(gr => gr.Role)
-            //     .WithMany(r => r.Groups)
-            //     .HasForeignKey(gr => gr.GroupId);
-            // modelBuilder.Entity<GroupRole>()
-            //     .HasOne(gr => gr.Group)
-            //     .WithMany(g => g.Roles)
-            //     .HasForeignKey(gr => gr.RoleId);
+            modelBuilder.Entity<RoleModuleMap>().HasKey(map => new {map.RoleId, map.ModuleId});
+            modelBuilder.Entity<RoleServiceMap>().HasKey(map => new {map.RoleId, map.ServiceId});
+            modelBuilder.Entity<GroupRoleMap>().HasKey(gr => new {gr.RoleId, GroupId = gr.GroupId});
         }
     }
 }
