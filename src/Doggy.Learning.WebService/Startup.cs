@@ -78,6 +78,8 @@ namespace Doggy.Learning.WebService
 
             services.AddScoped<GroupRepositoryBase, GroupRepository>();
             services.AddScoped<RoleRepositoryBase, RoleRepository>();
+            services.AddScoped<ModuleRepositoryBase, ModuleRepository>();
+            services.AddScoped<ServiceRepositoryBase, ServiceRepository>();
 
             #endregion
 
