@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Doggy.Learning.Auth.Domain.Entities;
-using Doggy.Learning.Auth.Domain.Models;
 using Doggy.Learning.Infrastructure.Interfaces;
 
 namespace Doggy.Learning.Auth.Domain.Interfaces

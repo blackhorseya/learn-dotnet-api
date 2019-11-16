@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.WebService.Models;
-using Doggy.Learning.WebService.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,12 @@ namespace Doggy.Learning.WebService.Controllers
     [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly RoleRepositoryBase _roleRepo;
+        private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserController(RoleRepositoryBase roleRepo, IUserService userService)
+        public UserController(IMapper mapper, IUserService userService)
         {
-            _roleRepo = roleRepo;
+            _mapper = mapper;
             _userService = userService;
         }
 
@@ -29,16 +30,13 @@ namespace Doggy.Learning.WebService.Controllers
         [HttpPost("authenticate")]
         public async Task<ActionResult<UserResponse>> Authenticate([FromBody] AuthenticateRequest request)
         {
-            var user = await _userService.Authenticate(request.Username, request.Password);
-            if (user == null)
+            var token = await _userService.Authenticate(request.Username, request.Password);
+            if (string.IsNullOrEmpty(token))
                 return BadRequest(new {message = "Username or password is incorrect"});
 
-            return Ok(new UserResponse
+            return Ok(new Dictionary<string, string>
             {
-                Id = user.Id,
-                Name = user.Name,
-                Roles = user.GetRolesName(),
-                Token = user.Token,
+                {"token", token}
             });
         }
 
@@ -46,34 +44,25 @@ namespace Doggy.Learning.WebService.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
         {
-            var users = await _userService.FindAllAsync();
-            var results = users.Select(u => new UserResponse
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Roles = u.GetRolesName(),
-            }).ToList();
+            var groups = await _userService.FindAllAsync();
+            var res = _mapper.Map<List<UserResponse>>(groups);
 
-            return results;
+            return Ok(res);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserResponse>> Get(int id)
+        [HttpGet("{name}")]
+        public async Task<ActionResult<UserResponse>> Get(string name)
         {
-            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var userid))
+            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var userId))
                 return BadRequest();
-                
-            if (id != userid && !User.IsInRole("admin"))
+
+            if (name != User.Identity.Name && !User.IsInRole("admin"))
                 return Forbid();
 
-            var user = await _userService.FindByIdAsync(id);
+            var group = await _userService.FindByIdAsync(userId);
+            var res = _mapper.Map<UserResponse>(group);
 
-            return new UserResponse
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Roles = user.GetRolesName(),
-            };
+            return Ok(res);
         }
     }
 }
