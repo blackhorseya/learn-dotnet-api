@@ -55,13 +55,10 @@ namespace Doggy.Learning.WebService.Controllers
         [HttpGet("{name}")]
         public async Task<ActionResult<UserResponse>> Get(string name)
         {
-            if (!int.TryParse(User.FindFirst(ClaimTypes.NameIdentifier).Value, out var userId))
-                return BadRequest();
-
             if (name != User.Identity.Name && !User.IsInRole("admin"))
                 return Forbid();
 
-            var group = await _userService.FindByIdAsync(userId);
+            var group = await _userService.FindByNameAsync(name);
             var res = _mapper.Map<UserResponse>(group);
 
             return Ok(res);
