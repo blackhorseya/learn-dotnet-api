@@ -8,6 +8,6 @@ namespace Doggy.Learning.WebService.Models
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<string> Roles { get; set; }
+        public List<RoleResponse> Roles { get; set; }
     }
 }

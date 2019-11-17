@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Security.Claims;
 using Doggy.Learning.Auth.Domain.Interfaces;
-using Doggy.Learning.Infrastructure.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -30,9 +29,8 @@ namespace Doggy.Learning.Auth.Domain.Filters
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var isAuthenticated = context.HttpContext.User.Identity.IsAuthenticated;
-            var currentUser = context.HttpContext.User.Identity as ClaimsIdentity;
 
-            if (isAuthenticated && currentUser != null)
+            if (isAuthenticated && context.HttpContext.User.Identity is ClaimsIdentity currentUser)
             {
                 var isValid = false;
                 var roles = currentUser.FindAll(ClaimTypes.Role);

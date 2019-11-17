@@ -7,6 +7,7 @@ using AutoMapper;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Filters;
 using Doggy.Learning.Auth.Domain.Interfaces;
+using Doggy.Learning.Infrastructure.Constants;
 using Doggy.Learning.WebService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace Doggy.Learning.WebService.Controllers
         }
 
         [HttpGet]
-        [Rbac("management")]
+        [Rbac(ModuleConstants.Management)]
         public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
         {
             var groups = await _userService.FindAllAsync();
