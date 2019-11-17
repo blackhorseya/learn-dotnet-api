@@ -1,20 +1,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Doggy.Learning.Auth.Domain.Entities;
-using Doggy.Learning.Auth.Domain.Models;
 
 namespace Doggy.Learning.Auth.Domain.Interfaces
 {
     public interface IUserService
     {
-        Task<User> Authenticate(string username, string password);
-        
-        Task<User> FindByIdAsync(int id);
-        
-        Task<User> FindByNameAsync(string name);
-        
-        Task<List<User>> FindAllAsync();
+        Task<string> Authenticate(string username, string password);
 
-        Task<User> CreateUserAsync(Group group);
+        Task<Group> FindByIdAsync(int id);
+
+        Task<Group> FindByNameAsync(string name);
+
+        Task<List<Group>> FindAllAsync();
     }
 }

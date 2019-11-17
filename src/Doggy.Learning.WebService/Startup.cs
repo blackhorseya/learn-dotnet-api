@@ -1,4 +1,5 @@
 using System.Text;
+using AutoMapper;
 using Doggy.Learning.Auth.Business.Services;
 using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
@@ -45,6 +46,7 @@ namespace Doggy.Learning.WebService
             services.AddCors();
             services.AddControllers(options => { options.Filters.Add<HeaderFilter>(); })
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
+            services.AddAutoMapper(typeof(Startup));
 
             #region injection db context
             services.AddDbContextPool<AuthContext>(options =>
@@ -78,6 +80,8 @@ namespace Doggy.Learning.WebService
 
             services.AddScoped<GroupRepositoryBase, GroupRepository>();
             services.AddScoped<RoleRepositoryBase, RoleRepository>();
+            services.AddScoped<ModuleRepositoryBase, ModuleRepository>();
+            services.AddScoped<ServiceRepositoryBase, ServiceRepository>();
 
             #endregion
 

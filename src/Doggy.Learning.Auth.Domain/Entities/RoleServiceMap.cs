@@ -1,13 +1,11 @@
 namespace Doggy.Learning.Auth.Domain.Entities
 {
-    public class RolePermission
+    public class RoleServiceMap
     {
         public int RoleId { get; set; }
-        
         public virtual Role Role { get; set; }
-
-        public int PermissionId { get; set; }
         
-        public virtual Permission Permission { get; set; }
+        public int ServiceId { get; set; }
+        public virtual Service Service { get; set; }
     }
 }
