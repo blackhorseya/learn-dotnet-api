@@ -34,14 +34,14 @@ namespace Doggy.Learning.Auth.Business.Services
             if (password == null) throw new ArgumentNullException(nameof(password));
 
             // todo: verify username and password
-            var user = await FindByNameAsync(username);
+            var group = await FindByNameAsync(username);
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = user.GetClaimsIdentity(),
+                Subject = group.GetClaimsIdentity(),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)

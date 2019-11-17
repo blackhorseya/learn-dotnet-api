@@ -149,7 +149,7 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("Modules")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

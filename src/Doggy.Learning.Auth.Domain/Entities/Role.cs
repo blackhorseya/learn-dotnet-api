@@ -17,5 +17,7 @@ namespace Doggy.Learning.Auth.Domain.Entities
         public virtual List<GroupRoleMap> Groups { get; set; }
 
         public virtual List<RoleServiceMap> Services { get; set; }
+        
+        public virtual List<RoleModuleMap> Modules { get; set; }
     }
 }

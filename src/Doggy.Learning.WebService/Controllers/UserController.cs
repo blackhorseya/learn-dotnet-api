@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Doggy.Learning.Auth.Domain.Entities;
+using Doggy.Learning.Auth.Domain.Filters;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.WebService.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +42,7 @@ namespace Doggy.Learning.WebService.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Rbac("management")]
         public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
         {
             var groups = await _userService.FindAllAsync();

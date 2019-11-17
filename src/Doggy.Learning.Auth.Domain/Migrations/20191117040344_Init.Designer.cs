@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doggy.Learning.Auth.Domain.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20191115130802_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20191117040344_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -151,7 +151,7 @@ namespace Doggy.Learning.Auth.Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Doggy.Learning.Auth.Domain.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("Modules")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
