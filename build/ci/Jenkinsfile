@@ -1,10 +1,9 @@
 pipeline {
     triggers {
-        when { branch "develop" }
-        cron('''
+      cron( env.BRANCH_NAME.equals('develop') ? '''
         TZ=Asia/Taipei
         H H(4-5) * * *
-        ''')
+        ''' : '')
     }
   agent {
     kubernetes {
