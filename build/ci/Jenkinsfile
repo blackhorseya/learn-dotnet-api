@@ -1,5 +1,12 @@
 pipeline {
   agent {
+    triggers {
+        when { branch "develop" }
+        cron('''
+        TZ=Asia/Taipei
+        H H(4-5) * * *
+        ''')
+    }
     kubernetes {
       yaml """
 apiVersion: v1
