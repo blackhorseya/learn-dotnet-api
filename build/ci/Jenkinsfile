@@ -1,5 +1,4 @@
 pipeline {
-  agent {
     triggers {
         when { branch "develop" }
         cron('''
@@ -7,6 +6,7 @@ pipeline {
         H H(4-5) * * *
         ''')
     }
+  agent {
     kubernetes {
       yaml """
 apiVersion: v1
