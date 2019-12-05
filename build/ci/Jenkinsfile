@@ -1,10 +1,10 @@
 pipeline {
-    triggers {
-      cron( env.BRANCH_NAME.equals('develop') ? '''
-        TZ=Asia/Taipei
-        H H(4-5) * * *
-        ''' : '')
-    }
+  triggers {
+    pollSCM( env.BRANCH_NAME.equals('develop') ? 'TZ=Asia/Taipei\nH H(4-5) * * *' : '')
+  }
+  options {
+    timestamps()
+  }
   agent {
     kubernetes {
       yaml """
@@ -17,11 +17,6 @@ spec:
     command:
     - cat
     tty: true
-  - name: busybox
-    image: busybox
-    command:
-    - cat
-    tty: true
 """
     }
   }
@@ -29,7 +24,10 @@ spec:
     stage('Prepare') {
       steps {
         echo "branch name: ${env.GIT_BRANCH}"
-        sh 'ls -al'
+        sh '''
+        ls -al
+        printenv
+        '''
       }
     }
 
