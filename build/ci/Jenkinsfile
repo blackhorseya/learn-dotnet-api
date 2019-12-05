@@ -32,6 +32,7 @@ spec:
         container('dotnet-sdk') {
           sh '''
           dotnet build -c Release -o ./publish
+          ls -al publish
           '''
         }
       }
@@ -44,21 +45,6 @@ spec:
           dotnet test --no-build --no-restore
           '''
         }
-      }
-    }
-
-    stage('Push') {
-      steps {
-        container('busybox') {
-          echo "push..."
-          sh 'ls -al'
-        }
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        echo "deploy..."
       }
     }
   }
