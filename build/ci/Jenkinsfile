@@ -1,0 +1,65 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: dotnet-3.1-sdk
+    image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+    command:
+    - cat
+    tty: true
+  - name: busybox
+    image: busybox
+    command:
+    - cat
+    tty: true
+"""
+    }
+  }
+  stages {
+    stage('Prepare') {
+      steps {
+        echo "branch name: ${env.GIT_BRANCH}"
+        sh 'ls -al'
+      }
+    }
+
+    stage('Build') {
+      steps {
+        container('dotnet-3.1-sdk') {
+          sh '''
+          dotnet build -c Release -o ./publish
+          '''
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        container('dotnet-3.1-sdk') {
+          sh '''
+          dotnet test --no-build --no-restore
+          '''
+        }
+      }
+    }
+
+    stage('Push') {
+      steps {
+        container('busybox') {
+          echo "push..."
+          sh 'ls -al'
+        }
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        echo "deploy..."
+      }
+    }
+  }
+}
