@@ -1,7 +1,9 @@
+#!/usr/bin/env groovy
+
 pipeline {
-  // triggers {
-  //   pollSCM( env.BRANCH_NAME.equals('develop') ? 'TZ=Asia/Taipei\nH H(4-5) * * *' : '')
-  // }
+  triggers {
+    pollSCM( env.BRANCH_NAME.equals('develop') ? 'TZ=Asia/Taipei\nH H(4-5) * * *' : '')
+  }
   agent {
     kubernetes {
       yaml """
