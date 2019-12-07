@@ -40,7 +40,7 @@ spec:
         container('dotnet-sdk') {
           echo "perform dotnet test and generate test and coverage results"
           sh '''
-          dotnet test --no-build --no-restore
+          dotnet test
           '''
         }
       }
@@ -49,7 +49,7 @@ spec:
     stage('Static Code Analysis') {
       steps {
         echo "perform static code analysis"
-        echo "push coverage and test results to sornacube"
+        echo "push coverage and test results to sornaqube"
       }
     }
 

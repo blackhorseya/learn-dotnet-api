@@ -39,7 +39,7 @@ spec:
       steps {
         container('dotnet-sdk') {
           sh '''
-          dotnet test --no-build --no-restore
+          dotnet test
           '''
         }
       }
