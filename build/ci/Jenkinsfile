@@ -1,10 +1,7 @@
 pipeline {
-  triggers {
-    pollSCM( env.BRANCH_NAME.equals('develop') ? 'TZ=Asia/Taipei\nH H(4-5) * * *' : '')
-  }
-  options {
-    timestamps()
-  }
+  // triggers {
+  //   pollSCM( env.BRANCH_NAME.equals('develop') ? 'TZ=Asia/Taipei\nH H(4-5) * * *' : '')
+  // }
   agent {
     kubernetes {
       yaml """
@@ -24,10 +21,8 @@ spec:
     stage('Prepare') {
       steps {
         echo "branch name: ${env.GIT_BRANCH}"
-        sh '''
-        ls -al
-        printenv
-        '''
+        sh 'ls -al'
+        sh 'printenv'
       }
     }
 
@@ -36,7 +31,6 @@ spec:
         container('dotnet-sdk') {
           sh '''
           dotnet build -c Release -o ./publish
-          ls -al publish
           '''
         }
       }
