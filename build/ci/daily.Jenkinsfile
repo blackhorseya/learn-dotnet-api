@@ -41,10 +41,31 @@ spec:
     stage('Test') {
       steps {
         container('dotnet-sdk') {
+          echo "perform dotnet test and generate test and coverage results"
           sh '''
           dotnet test --no-build --no-restore
           '''
         }
+      }
+    }
+
+    stage('Static Code Analysis') {
+      steps {
+        echo "perform static code analysis"
+        echo "push coverage and test results to sornacube"
+      }
+    }
+
+    stage('Build and push docker image') {
+      steps {
+        echo "build docker image..."
+        echo "push the image to harbor..."
+      }
+    }
+
+    stage('Deploy to dev') {
+      steps {
+        echo "deploy to dev for latest version"
       }
     }
   }
