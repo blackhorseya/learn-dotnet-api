@@ -25,7 +25,7 @@ spec:
             sh 'dotnet tool install --global dotnet-sonarscanner'
             sh 'apk add --no-cache openjdk8'
         }
-        sh 'ls -al'
+        sh 'dotnet sonarscanner -h'
         sh 'printenv'
       }
     }
