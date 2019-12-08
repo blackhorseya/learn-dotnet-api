@@ -8,7 +8,7 @@ RUN for file in $(ls *.csproj); do mkdir -p src/${file%.*} && mv $file src/${fil
 RUN dotnet restore ./src/Doggy.Learning.WebService
 
 COPY ./src ./src
-RUN dotnet publish ./src/Doggy.Learning.WebService -c Release -o out --no-restore
+RUN dotnet publish ./src/Doggy.Learning.WebService -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/runtime:3.1-alpine AS runtime
 WORKDIR /app

@@ -101,7 +101,6 @@ Application: ${APP_NAME}:${VERSION}
         steps {
             container('docker') {
                 echo """
-FULL_VERSION: ${VERSION}
 IMAGE_TAG: ${IMAGE_TAG}
 """
 
