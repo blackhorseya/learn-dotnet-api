@@ -18,6 +18,17 @@ spec:
     command:
     - cat
     tty: true
+  - name: docker
+    image: docker:1.11
+    command: ['cat']
+    tty: true
+    volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
 """
     }
   }
@@ -29,6 +40,9 @@ spec:
             sh 'dotnet tool install --global coverlet.console'
             sh 'dotnet tool install --global dotnet-sonarscanner'
             sh 'apk add --no-cache openjdk8'
+        }
+        container('docker') {
+            sh 'docker info'
         }
         sh 'printenv'
       }
