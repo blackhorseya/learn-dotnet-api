@@ -23,8 +23,8 @@ spec:
         container('dotnet-sdk') {
             sh 'dotnet tool install --global coverlet.console'
             sh 'dotnet tool install --global dotnet-sonarscanner'
-            sh 'java --version'
-            sh 'dotnet sonarscanner -h'
+            sh 'apk add --no-cache openjdk8'
+            sh 'java --version && dotnet sonarscanner -h'
         }
         sh 'printenv'
       }
