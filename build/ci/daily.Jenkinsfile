@@ -21,7 +21,7 @@ spec:
       steps {
         echo "branch name: ${env.GIT_BRANCH}"
         container('dotnet-sdk') {
-            sh 'dotnet toole install --global coverlet.console'
+            sh 'dotnet tool install --global coverlet.console'
             sh 'dotnet tool install --global dotnet-sonarscanner'
             sh 'apk add --no-cache openjdk8'
         }
