@@ -20,6 +20,11 @@ spec:
     stage('Prepare') {
       steps {
         echo "branch name: ${env.GIT_BRANCH}"
+        container('dotnet-sdk') {
+            sh 'dotnet toole install --global coverlet.console'
+            sh 'dotnet tool install --global dotnet-sonarscanner'
+            sh 'apk add --no-cache openjdk8'
+        }
         sh 'ls -al'
         sh 'printenv'
       }
@@ -40,16 +45,21 @@ spec:
         container('dotnet-sdk') {
           echo "perform dotnet test and generate test and coverage results"
           sh '''
-          dotnet test
+          dotnet test /p:CollectCoverage=true \
+          /p:CoverletOutputFormat=opencover \
+          /p:CoverletOutput=/coverage/
           '''
+          sh 'ls -al'
         }
       }
     }
 
     stage('Static Code Analysis') {
       steps {
-        echo "perform static code analysis"
-        echo "push coverage and test results to sornaqube"
+        container('dotnet-sdk') {
+            echo "perform static code analysis"
+            echo "push coverage and test results to sornaqube"
+        }
       }
     }
 
