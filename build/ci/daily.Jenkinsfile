@@ -59,9 +59,9 @@ spec:
           sh '''
           dotnet test /p:CollectCoverage=true \
           /p:CoverletOutputFormat=opencover \
-          /p:CoverletOutput=/coverage/
+          /p:CoverletOutput=../coverage/
           '''
-          sh 'ls -al /'
+          sh 'ls -al /test'
         }
       }
     }
