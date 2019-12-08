@@ -3,6 +3,8 @@
 pipeline {
   environment {
     PATH = "/root/.dotnet/tools:$PATH"
+    APP_NAME = 'learn-dotnet'
+    VERSION = '1.0.0'
   }
   agent {
     kubernetes {
@@ -27,8 +29,8 @@ spec:
             sh 'dotnet tool install --global coverlet.console'
             sh 'dotnet tool install --global dotnet-sonarscanner'
             sh 'apk add --no-cache openjdk8'
-            sh 'java -version && dotnet sonarscanner -h'
         }
+        sh 'docker info'
         sh 'printenv'
       }
     }
@@ -48,14 +50,12 @@ spec:
           sh '''
           dotnet test /p:CollectCoverage=true \
           /p:CoverletOutputFormat=opencover \
-          /p:CoverletOutput=../../TestResults/ \
+          /p:CoverletOutput=$(pwd)/TestResults/ \
           --logger trx \
-          -r ./TestResults
-          -o ./publish
+          -r ./TestResults \
+          -o ./publish \
           --no-build --no-restore
           '''
-          sh 'pwd'
-          sh 'ls -al ./TestResults'
         }
       }
     }
