@@ -1,6 +1,9 @@
 #!/usr/bin/env groovy
 
 pipeline {
+  environment {
+    PATH = "/root/.dotnet/tools:$PATH"
+  }
   agent {
     kubernetes {
       yaml """
