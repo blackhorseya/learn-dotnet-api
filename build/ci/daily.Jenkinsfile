@@ -30,7 +30,6 @@ spec:
             sh 'dotnet tool install --global dotnet-sonarscanner'
             sh 'apk add --no-cache openjdk8'
         }
-        sh 'docker info'
         sh 'printenv'
       }
     }
@@ -72,6 +71,10 @@ spec:
 
     stage('Build and push docker image') {
       steps {
+        environment {
+            DOCKERHUB = credentials('docker-hub-credential')
+        }
+        echo "${DOCKERHUB_USR}:${DOCKERHUB_PSW}"
         echo "build docker image..."
         echo "push the image to harbor..."
       }
