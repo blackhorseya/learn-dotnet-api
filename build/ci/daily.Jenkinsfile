@@ -5,7 +5,6 @@ pipeline {
     PATH = "/root/.dotnet/tools:$PATH"
     APP_NAME = 'learn-dotnet'
     VERSION = '1.0.0'
-    DOCKERHUB = credentials('docker-hub-credential')
   }
   agent {
     kubernetes {
@@ -71,11 +70,14 @@ spec:
     }
 
     stage('Build and push docker image') {
-      steps {
-        echo "${DOCKERHUB_USR}:${DOCKERHUB_PSW}"
-        echo "build docker image..."
-        echo "push the image to harbor..."
-      }
+        environment {
+            DOCKERHUB = credentials('docker-hub-credential')
+        }
+        steps {
+          echo "${DOCKERHUB_USR}:${DOCKERHUB_PSW}"
+          echo "build docker image..."
+          echo "push the image to harbor..."
+        }
     }
 
     stage('Deploy to dev') {
