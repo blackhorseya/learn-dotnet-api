@@ -24,7 +24,7 @@ spec:
             sh 'dotnet tool install --global coverlet.console'
             sh 'dotnet tool install --global dotnet-sonarscanner'
             sh 'apk add --no-cache openjdk8'
-            sh 'java --version && dotnet sonarscanner -h'
+            sh 'java -v && dotnet sonarscanner -h'
         }
         sh 'printenv'
       }
@@ -40,6 +40,15 @@ spec:
       }
     }
 
+    stage('Static Code Analysis') {
+      steps {
+        container('dotnet-sdk') {
+            echo "perform static code analysis"
+            echo "push coverage and test results to sornaqube"
+        }
+      }
+    }
+
     stage('Test') {
       steps {
         container('dotnet-sdk') {
@@ -50,15 +59,6 @@ spec:
           /p:CoverletOutput=/coverage/
           '''
           sh 'ls -al'
-        }
-      }
-    }
-
-    stage('Static Code Analysis') {
-      steps {
-        container('dotnet-sdk') {
-            echo "perform static code analysis"
-            echo "push coverage and test results to sornaqube"
         }
       }
     }
