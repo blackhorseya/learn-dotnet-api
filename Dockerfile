@@ -5,7 +5,6 @@ EXPOSE 80
 COPY ./*.sln .
 COPY ./src/*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p src/${file%.*} && mv $file src/${file%.*}; done
-RUN wget "https://api.nuget.org/v3/index.json"
 RUN dotnet restore ./src/Doggy.Learning.WebService
 
 COPY ./src ./src

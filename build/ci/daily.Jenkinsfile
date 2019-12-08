@@ -19,21 +19,16 @@ spec:
     - cat
     tty: true
   - name: docker
-    image: docker:19.03.1
-    command:
-    - sleep
-    args:
-    - 99d
-    env:
-      - name: DOCKER_HOST
-        value: tcp://localhost:2375
-  - name: docker-daemon
-    image: docker:19.03.1-dind
-    securityContext:
-      privileged: true
-    env:
-      - name: DOCKER_TLS_CERTDIR
-        value: ""
+    image: docker:latest
+    command: ['cat']
+    tty: true
+    volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
+  volumes:
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
 """
     }
   }
@@ -57,6 +52,7 @@ Application: ${APP_NAME}:${VERSION}
         
         container('docker') {
             sh 'docker info'
+            sh 'docker version'
         }
         
         sh 'printenv'
@@ -100,6 +96,7 @@ Application: ${APP_NAME}:${VERSION}
 
     stage('Build and push docker image') {
         environment {
+            DOCKER_BUILDKIT = '1'
             DOCKERHUB = credentials('docker-hub-credential')
             IMAGE_TAG = "${DOCKERHUB_USR}/${APP_NAME}:${VERSION}"
         }
@@ -109,7 +106,7 @@ Application: ${APP_NAME}:${VERSION}
 IMAGE_TAG: ${IMAGE_TAG}
 """
 
-                sh "docker build -t ${IMAGE_TAG} -f Dockerfile ."
+                sh "docker build -t ${IMAGE_TAG} -f Dockerfile --network bridge ."
                 sh "docker images --filter=reference='${DOCKERHUB_USR}/${APP_NAME}:*'"
                 echo "tag images"
                 echo "push the image to harbor..."
