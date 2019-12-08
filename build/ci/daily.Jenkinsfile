@@ -4,7 +4,7 @@ pipeline {
   environment {
     PATH = "/root/.dotnet/tools:$PATH"
     APP_NAME = 'learn-dotnet'
-    VERSION = '1.0.0'
+    VERSION = "1.0.0.${BUILD_ID}"
   }
   agent {
     kubernetes {
@@ -35,15 +35,25 @@ spec:
   stages {
     stage('Prepare') {
       steps {
-        echo "branch name: ${env.GIT_BRANCH}"
+        echo """
+Perform ${JOB_NAME} for
+Repo: ${env.GIT_URL}
+Branch: ${env.GIT_BRANCH}
+Application: ${APP_NAME}:${VERSION}
+"""
+        
         container('dotnet-sdk') {
-            sh 'dotnet tool install --global coverlet.console'
-            sh 'dotnet tool install --global dotnet-sonarscanner'
-            sh 'apk add --no-cache openjdk8'
+            sh '''dotnet tool install --global coverlet.console
+            dotnet tool install --global dotnet-sonarscanner
+            apk add --no-cache openjdk8'''
+            
+            sh 'dotnet --info'
         }
+        
         container('docker') {
             sh 'docker info'
         }
+        
         sh 'printenv'
       }
     }
@@ -51,7 +61,7 @@ spec:
     stage('Build') {
       steps {
         container('dotnet-sdk') {
-          sh 'dotnet build -c Release -o ./publish'
+            sh 'dotnet build -c Release -o ./publish'
         }
       }
     }
@@ -86,11 +96,20 @@ spec:
     stage('Build and push docker image') {
         environment {
             DOCKERHUB = credentials('docker-hub-credential')
+            IMAGE_TAG = "${DOCKERHUB_USR}/${APP_NAME}:${VERSION}"
         }
         steps {
-          echo "${DOCKERHUB_USR}:${DOCKERHUB_PSW}"
-          echo "build docker image..."
-          echo "push the image to harbor..."
+            container('docker') {
+                echo """
+FULL_VERSION: ${VERSION}
+IMAGE_TAG: ${IMAGE_TAG}
+"""
+
+                sh "docker build -t ${IMAGE_TAG} -f Dockerfile ."
+                sh "docker images --filter=reference='${DOCKERHUB_USR}/${APP_NAME}:*'"
+                echo "tag images"
+                echo "push the image to harbor..."
+            }
         }
     }
 
