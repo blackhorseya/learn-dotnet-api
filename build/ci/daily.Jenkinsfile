@@ -61,6 +61,7 @@ spec:
           /p:CoverletOutputFormat=opencover \
           /p:CoverletOutput=../coverage/
           '''
+          sh 'pwd'
           sh 'ls -al /test'
         }
       }
