@@ -24,7 +24,7 @@ spec:
             sh 'dotnet tool install --global coverlet.console'
             sh 'dotnet tool install --global dotnet-sonarscanner'
             sh 'apk add --no-cache openjdk8'
-            sh 'java -v && dotnet sonarscanner -h'
+            sh 'java -version && dotnet sonarscanner -h'
         }
         sh 'printenv'
       }
