@@ -36,18 +36,7 @@ spec:
     stage('Build') {
       steps {
         container('dotnet-sdk') {
-          sh '''
-          dotnet build -c Release -o ./publish
-          '''
-        }
-      }
-    }
-
-    stage('Static Code Analysis') {
-      steps {
-        container('dotnet-sdk') {
-            echo "perform static code analysis"
-            echo "push coverage and test results to sornaqube"
+          sh 'dotnet build -c Release -o ./publish'
         }
       }
     }
@@ -59,10 +48,24 @@ spec:
           sh '''
           dotnet test /p:CollectCoverage=true \
           /p:CoverletOutputFormat=opencover \
-          /p:CoverletOutput=../coverage/
+          /p:CoverletOutput=../../TestResults/ \
+          --logger trx \
+          -r ./TestResults
+          -o ./publish
+          --no-build --no-restore
           '''
           sh 'pwd'
-          sh 'ls -al /test'
+          sh 'ls -al ./TestResults'
+        }
+      }
+    }
+
+    stage('Static Code Analysis') {
+      steps {
+        container('dotnet-sdk') {
+//             sh 'dotnet sonarscanner begin'
+            echo "perform static code analysis"
+            echo "push coverage and test results to sonarqube"
         }
       }
     }
