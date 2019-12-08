@@ -19,16 +19,21 @@ spec:
     - cat
     tty: true
   - name: docker
-    image: docker:1.11
-    command: ['cat']
-    tty: true
-    volumeMounts:
-    - name: dockersock
-      mountPath: /var/run/docker.sock
-  volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
+    image: docker:19.03.1
+    command:
+    - sleep
+    args:
+    - 99d
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
+  - name: docker-daemon
+    image: docker:19.03.1-dind
+    securityContext:
+      privileged: true
+    env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
 """
     }
   }
@@ -104,7 +109,7 @@ Application: ${APP_NAME}:${VERSION}
 IMAGE_TAG: ${IMAGE_TAG}
 """
 
-                sh "docker build -t ${IMAGE_TAG} -f Dockerfile --network=bridge ."
+                sh "docker build -t ${IMAGE_TAG} -f Dockerfile ."
                 sh "docker images --filter=reference='${DOCKERHUB_USR}/${APP_NAME}:*'"
                 echo "tag images"
                 echo "push the image to harbor..."
