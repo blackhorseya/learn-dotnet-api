@@ -61,7 +61,7 @@ spec:
           /p:CoverletOutputFormat=opencover \
           /p:CoverletOutput=/coverage/
           '''
-          sh 'ls -al'
+          sh 'ls -al /'
         }
       }
     }
