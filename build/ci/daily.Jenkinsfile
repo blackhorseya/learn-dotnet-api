@@ -12,6 +12,7 @@ pipeline {
 apiVersion: v1
 kind: Pod
 spec:
+  hostNetwork: true
   containers:
   - name: dotnet-sdk
     image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
