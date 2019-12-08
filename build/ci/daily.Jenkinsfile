@@ -96,7 +96,6 @@ Application: ${APP_NAME}:${VERSION}
 
     stage('Build and push docker image') {
         environment {
-            DOCKER_BUILDKIT = '1'
             DOCKERHUB = credentials('docker-hub-credential')
             IMAGE_TAG = "${DOCKERHUB_USR}/${APP_NAME}:${VERSION}"
         }
