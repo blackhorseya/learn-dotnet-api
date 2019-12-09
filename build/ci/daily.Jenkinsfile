@@ -5,6 +5,8 @@ pipeline {
     PATH = "/root/.dotnet/tools:$PATH"
     APP_NAME = 'learn-dotnet'
     VERSION = "1.0.0.${BUILD_ID}"
+    DOCKERHUB = credentials('docker-hub-credential')
+    IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
   }
   agent {
     kubernetes {
@@ -95,10 +97,6 @@ Application: ${APP_NAME}:${VERSION}
     }
 
     stage('Build and push docker image') {
-        environment {
-            DOCKERHUB = credentials('docker-hub-credential')
-            IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
-        }
         steps {
             container('docker') {
                 echo """
@@ -106,12 +104,13 @@ IMAGE_NAME: ${IMAGE_NAME}
 """
 
                 sh "docker build -t ${IMAGE_NAME}:latest -f Dockerfile --network bridge ."
-                sh "docker images --filter=reference='${IMAGE_NAME}:*'"
                 sh "docker login --username ${DOCKERHUB_USR} --password ${DOCKERHUB_PSW}"
                 sh """
-                docker push ${IMAGE_NAME}:latest \
-                docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${VERSION} && docker push ${IMAGE_NAME}:${VERSION}
+                docker push ${IMAGE_NAME}:latest && \
+                docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${VERSION} && \
+                docker push ${IMAGE_NAME}:${VERSION}
                 """
+                sh "docker images --filter=reference='${IMAGE_NAME}:*'"
             }
         }
     }
