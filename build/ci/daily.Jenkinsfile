@@ -97,18 +97,21 @@ Application: ${APP_NAME}:${VERSION}
     stage('Build and push docker image') {
         environment {
             DOCKERHUB = credentials('docker-hub-credential')
-            IMAGE_TAG = "${DOCKERHUB_USR}/${APP_NAME}:${VERSION}"
+            IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
         }
         steps {
             container('docker') {
                 echo """
-IMAGE_TAG: ${IMAGE_TAG}
+IMAGE_NAME: ${IMAGE_NAME}
 """
 
-                sh "docker build -t ${IMAGE_TAG} -f Dockerfile --network bridge ."
-                sh "docker images --filter=reference='${DOCKERHUB_USR}/${APP_NAME}:*'"
-                echo "tag images"
-                echo "push the image to harbor..."
+                sh "docker build -t ${IMAGE_NAME}:latest -f Dockerfile --network bridge ."
+                sh "docker images --filter=reference='${IMAGE_NAME}:*'"
+                sh "docker login --username ${DOCKERHUB_USR} --password ${DOCKERHUB_PSW}"
+                sh """
+                docker push ${IMAGE_NAME}:latest \
+                docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${VERSION} && docker push ${IMAGE_NAME}:${VERSION}
+                """
             }
         }
     }
