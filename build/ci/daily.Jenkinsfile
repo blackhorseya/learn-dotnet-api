@@ -121,4 +121,29 @@ IMAGE_NAME: ${IMAGE_NAME}
       }
     }
   }
+
+  post {
+      success {
+          script {
+            def attachments = [
+              [
+                "color": "good",
+                "title": "${JOB_NAME} #${BUILD_ID}",
+                "title_link": "${BUILD_URL}",
+                "fields": [
+                    [
+                        "title": "Status",
+                        "value": "Success",
+                        "short": false
+                    ]
+                ]
+              ]
+            ]
+            slackSend(attachments: attachments)
+          }
+      }
+      failure {
+          slackSend color: 'danger', message: 'build failed.'
+      }
+  }
 }
