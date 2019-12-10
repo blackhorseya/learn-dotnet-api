@@ -124,23 +124,47 @@ IMAGE_NAME: ${IMAGE_NAME}
 
   post {
       success {
-          script {
-            def attachments = [
-              [
-                "color": "good",
-                "title": "${JOB_NAME} #${BUILD_ID}",
-                "title_link": "${BUILD_URL}",
-                "fields": [
-                    [
-                        "title": "Status",
-                        "value": "Success",
-                        "short": false
-                    ]
+        script {
+          def blocks = [
+            [
+              "type": "section",
+              "text": [
+                "type": "mrkdwn",
+                "text": ":white_check_mark: *<${BUILD_URL}|${JOB_NAME} #${VERSION}>*"
+              ]
+            ],
+            [
+              "type": "divider"
+            ],
+            [
+              "type": "section",
+              "text": [
+                "type": "mrkdwn",
+                "text": ":white_check_mark: *${currentBuild.currentResult}*\n:white_check_mark: Elapsed: ${currentBuild.durationString}"
+              ]
+            ],
+            [
+              "type": "section",
+              "text": [
+                "type": "mrkdwn",
+                "text": ":white_check_mark: Job: <${JOB_URL}|${JOB_NAME}>\n :white_check_mark: Project: <${GIT_URL}|Github>\n :white_check_mark: Image: <https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
+              ]
+            ],
+            [
+              "type": "divider"
+            ],
+            [
+              "type": "context",
+              "elements": [
+                [
+                  "type": "mrkdwn",
+                  "text": "${currentBuild.changeSets}"
                 ]
               ]
             ]
-            slackSend(attachments: attachments)
-          }
+          ]
+          slackSend(blocks: blocks)
+        }
       }
       failure {
           slackSend color: 'danger', message: 'build failed.'
