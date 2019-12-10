@@ -123,14 +123,15 @@ IMAGE_NAME: ${IMAGE_NAME}
   }
 
   post {
-      success {
+      always {
         script {
+          def prefixIcon = ${currentBuild.currentResult} == 'SUCCESS' ? ':white_check_mark:' : ':x:'
           def blocks = [
             [
               "type": "section",
               "text": [
                 "type": "mrkdwn",
-                "text": ":white_check_mark: *<${BUILD_URL}|${JOB_NAME} #${VERSION}>*"
+                "text": "${prefixIcon} *<${BUILD_URL}|${JOB_NAME} #${VERSION}>*"
               ]
             ],
             [
@@ -140,25 +141,19 @@ IMAGE_NAME: ${IMAGE_NAME}
               "type": "section",
               "text": [
                 "type": "mrkdwn",
-                "text": ":white_check_mark: *${currentBuild.currentResult}*\n:white_check_mark: Elapsed: ${currentBuild.durationString}"
+                "text": "Build Status :arrow_right: *${currentBuild.currentResult}*\nElapsed :arrow_right: ${currentBuild.durationString}"
               ]
             ],
             [
               "type": "section",
               "text": [
                 "type": "mrkdwn",
-                "text": ":white_check_mark: Job: <${JOB_URL}|${JOB_NAME}>\n :white_check_mark: Project: <${GIT_URL}|Github>\n :white_check_mark: Image: <https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
+                "text": "Job :arrow_right: <${JOB_URL}|${JOB_NAME}>\nProject :arrow_right: <${GIT_URL}|Github>\nDocker Image :arrow_right: <https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
               ]
-            ],
-            [
-              "type": "divider"
             ]
           ]
           slackSend(blocks: blocks)
         }
-      }
-      failure {
-          slackSend color: 'danger', message: 'build failed.'
       }
   }
 }
