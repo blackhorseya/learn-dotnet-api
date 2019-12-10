@@ -126,7 +126,7 @@ IMAGE_NAME: ${IMAGE_NAME}
   post {
       always {
         script {
-          def prefixIcon = ${currentBuild.currentResult} == 'SUCCESS' ? ':white_check_mark:' : ':x:'
+          def prefixIcon = currentBuild.currentResult == 'SUCCESS' ? ':white_check_mark:' : ':x:'
           def blocks = [
             [
               "type": "section",
