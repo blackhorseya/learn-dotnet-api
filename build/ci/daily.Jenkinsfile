@@ -152,15 +152,6 @@ IMAGE_NAME: ${IMAGE_NAME}
             ],
             [
               "type": "divider"
-            ],
-            [
-              "type": "context",
-              "elements": [
-                [
-                  "type": "mrkdwn",
-                  "text": "${currentBuild.changeSets}"
-                ]
-              ]
             ]
           ]
           slackSend(blocks: blocks)
