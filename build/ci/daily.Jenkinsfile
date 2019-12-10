@@ -57,6 +57,7 @@ Application: ${APP_NAME}:${VERSION}
             sh 'docker version'
         }
         
+        checkout scm
         sh 'printenv'
       }
     }
