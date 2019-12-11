@@ -138,23 +138,23 @@ IMAGE_NAME: ${IMAGE_NAME}
               "fields": [
                 [
                   "type": "mrkdwn",
-                  "text": "*Build Status:*\n${currentBuild.currentResult}"
+                  "text": "*:star: Build Status:*\n${currentBuild.currentResult}"
                 ],
                 [
                   "type": "mrkdwn",
-                  "text": "*Elapsed:*\n${currentBuild.durationString}"
+                  "text": "*:star: Elapsed:*\n${currentBuild.durationString}"
                 ],
                 [
                   "type": "mrkdwn",
-                  "text": "*Job:*\n<${JOB_URL}|${JOB_NAME}>"
+                  "text": "*:star: Job:*\n<${JOB_URL}|${JOB_NAME}>"
                 ],
                 [
                   "type": "mrkdwn",
-                  "text": "*Project:*\n<${GIT_URL}|Github>"
+                  "text": "*:star: Project:*\n<${GIT_URL}|Github>"
                 ],
                 [
                   "type": "mrkdwn",
-                  "text": "*Build Image:*\n<https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
+                  "text": "*:star: Build Image:*\n<https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
                 ]
               ]
             ]
