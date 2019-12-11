@@ -16,7 +16,7 @@ kind: Pod
 spec:
   containers:
   - name: dotnet-sdk
-    image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+    image: blackhorseya/dotnet-builder:3.1-alpine
     command:
     - cat
     tty: true
@@ -45,10 +45,6 @@ Application: ${APP_NAME}:${VERSION}
 """
         
         container('dotnet-sdk') {
-            sh '''dotnet tool install --global coverlet.console
-            dotnet tool install --global dotnet-sonarscanner
-            apk add --no-cache openjdk8'''
-            
             sh 'dotnet --info'
         }
         
@@ -57,7 +53,10 @@ Application: ${APP_NAME}:${VERSION}
             sh 'docker version'
         }
         
-        checkout scm
+        script {
+          def gitscm = checkout scm
+          echo "${gitscm.GIT_COMMIT}"
+        }
         sh 'printenv'
       }
     }
