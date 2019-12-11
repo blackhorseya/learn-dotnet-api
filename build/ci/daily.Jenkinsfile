@@ -135,16 +135,27 @@ IMAGE_NAME: ${IMAGE_NAME}
             ],
             [
               "type": "section",
-              "text": [
-                "type": "mrkdwn",
-                "text": "Build Status :arrow_right: *${currentBuild.currentResult}*\nElapsed :arrow_right: ${currentBuild.durationString}"
-              ]
-            ],
-            [
-              "type": "section",
-              "text": [
-                "type": "mrkdwn",
-                "text": "Job :arrow_right: <${JOB_URL}|${JOB_NAME}>\nProject :arrow_right: <${GIT_URL}|Github>\nDocker Image :arrow_right: <https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
+              "fields": [
+                [
+                  "type": "mrkdwn",
+                  "text": "*Build Status:*\n${currentBuild.currentResult}"
+                ],
+                [
+                  "type": "mrkdwn",
+                  "text": "*Elapsed:*\n${currentBuild.durationString}"
+                ],
+                [
+                  "type": "mrkdwn",
+                  "text": "*Job:*\n<${JOB_URL}|${JOB_NAME}>"
+                ],
+                [
+                  "type": "mrkdwn",
+                  "text": "*Project:*\n<${GIT_URL}|Github>"
+                ],
+                [
+                  "type": "mrkdwn",
+                  "text": "*Build Image:*\n<https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
+                ]
               ]
             ]
           ]
