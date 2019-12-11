@@ -53,10 +53,6 @@ Application: ${APP_NAME}:${VERSION}
             sh 'docker version'
         }
         
-        script {
-          def gitscm = checkout scm
-          echo "${gitscm.GIT_COMMIT}"
-        }
         sh 'printenv'
       }
     }
