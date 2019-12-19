@@ -9,9 +9,15 @@ namespace Doggy.Learning.Infrastructure.Helpers
         public Authentication Authentication { get; set; } = new Authentication();
     }
 
+    public class AppInfo
+    {
+        public string Name { get; set; } = "learn-dotnet";
+        public string Version { get; set; } = "v1";
+    }
+
     public class Authentication
     {
-        public bool Enabled { get; set; } = false;
+        public bool Enabled { get; set; } = true;
         public string Secret { get; set; }
         public int Expired { get; set; } = 2;
     }

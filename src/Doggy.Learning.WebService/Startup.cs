@@ -74,6 +74,12 @@ namespace Doggy.Learning.WebService
 
             #endregion
 
+            #region injection helper
+
+            services.AddSingleton(typeof(JwtHelper));
+
+            #endregion
+            
             #region injection db context
 
             services.AddDbContextPool<AuthContext>(options =>

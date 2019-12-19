@@ -1,31 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Helpers;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Doggy.Learning.Auth.Business.Services
 {
     public class UserService : IUserService
     {
-        private readonly AppSettings _appSettings;
-        private readonly RoleRepositoryBase _roleRepo;
         private readonly GroupRepositoryBase _groupRepo;
+        private readonly JwtHelper _jwtHelper;
 
-        public UserService(IOptions<AppSettings> authSettings, RoleRepositoryBase roleRepo,
-            GroupRepositoryBase groupRepo)
+        public UserService(GroupRepositoryBase groupRepo, JwtHelper jwtHelper)
         {
-            _appSettings = authSettings.Value;
-            _roleRepo = roleRepo;
             _groupRepo = groupRepo;
+            _jwtHelper = jwtHelper;
         }
 
         public async Task<string> Authenticate(string username, string password)
@@ -37,17 +27,7 @@ namespace Doggy.Learning.Auth.Business.Services
             var group = await FindByNameAsync(username);
 
             // authentication successful so generate jwt token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Authentication.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = group.GetClaimsIdentity(),
-                Expires = DateTime.UtcNow.AddHours(_appSettings.Authentication.Expired),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return _jwtHelper.GenerateToken(group.GetClaimsIdentity());
         }
 
         public async Task<Group> FindByIdAsync(int id)
