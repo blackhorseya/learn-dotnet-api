@@ -10,7 +10,7 @@ RUN dotnet restore ./src/Doggy.Learning.WebService
 COPY ./src ./src
 RUN dotnet publish ./src/Doggy.Learning.WebService -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
 WORKDIR /app
 COPY --from=builder /app/out ./
 ENTRYPOINT ["dotnet", "Doggy.Learning.WebService.dll"]
