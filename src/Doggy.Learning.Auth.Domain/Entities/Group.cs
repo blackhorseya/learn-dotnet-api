@@ -8,15 +8,14 @@ namespace Doggy.Learning.Auth.Domain.Entities
 {
     public class Group : IEntity
     {
-        public int Id { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-        
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        
         public string Name { get; set; }
 
         public virtual List<GroupRoleMap> Roles { get; set; }
+        public int Id { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public List<Role> GetRoles()
         {
@@ -32,8 +31,8 @@ namespace Doggy.Learning.Auth.Domain.Entities
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, Name), 
-                new Claim(ClaimTypes.NameIdentifier, Id.ToString()),
+                new Claim(ClaimTypes.Name, Name),
+                new Claim(ClaimTypes.NameIdentifier, Id.ToString())
             };
             claims.AddRange(Roles.Select(map => new Claim(ClaimTypes.Role, map.Role.Name)));
 

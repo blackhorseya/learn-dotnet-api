@@ -1,8 +1,6 @@
-using System.Linq;
 using System.Security.Claims;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Doggy.Learning.Auth.Domain.Filters

@@ -18,7 +18,7 @@ namespace Doggy.Learning.Infrastructure.Helpers
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Learn .Net Core web api",
-                    Version = "v1",
+                    Version = "v1"
                 });
 
                 var xmlFile = $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml";
@@ -32,14 +32,14 @@ namespace Doggy.Learning.Infrastructure.Helpers
                     Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
+                    Type = SecuritySchemeType.ApiKey
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference()
+                            Reference = new OpenApiReference
                             {
                                 Id = "Bearer",
                                 Type = ReferenceType.SecurityScheme

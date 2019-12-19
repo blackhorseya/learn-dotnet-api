@@ -9,183 +9,171 @@ namespace Doggy.Learning.Auth.Domain.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Groups",
-                columns: table => new
+                "Groups",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    CreatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                    UpdatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Groups", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Modules",
-                columns: table => new
+                "Modules",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    CreatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                    UpdatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Modules", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Modules", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
+                "Roles",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    CreatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                    UpdatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Roles", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Services",
-                columns: table => new
+                "Services",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    CreatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                    UpdatedAt = table.Column<DateTime>()
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Services", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Services", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "GroupRoleMap",
-                columns: table => new
+                "GroupRoleMap",
+                table => new
                 {
-                    GroupId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false)
+                    GroupId = table.Column<int>(),
+                    RoleId = table.Column<int>()
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupRoleMap", x => new { x.RoleId, x.GroupId });
+                    table.PrimaryKey("PK_GroupRoleMap", x => new {x.RoleId, x.GroupId});
                     table.ForeignKey(
-                        name: "FK_GroupRoleMap_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
+                        "FK_GroupRoleMap_Groups_GroupId",
+                        x => x.GroupId,
+                        "Groups",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupRoleMap_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoleModuleMap",
-                columns: table => new
-                {
-                    RoleId = table.Column<int>(nullable: false),
-                    ModuleId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoleModuleMap", x => new { x.RoleId, x.ModuleId });
-                    table.ForeignKey(
-                        name: "FK_RoleModuleMap_Modules_ModuleId",
-                        column: x => x.ModuleId,
-                        principalTable: "Modules",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RoleModuleMap_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
+                        "FK_GroupRoleMap_Roles_RoleId",
+                        x => x.RoleId,
+                        "Roles",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleServiceMap",
-                columns: table => new
+                "RoleModuleMap",
+                table => new
                 {
-                    RoleId = table.Column<int>(nullable: false),
-                    ServiceId = table.Column<int>(nullable: false)
+                    RoleId = table.Column<int>(),
+                    ModuleId = table.Column<int>()
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleServiceMap", x => new { x.RoleId, x.ServiceId });
+                    table.PrimaryKey("PK_RoleModuleMap", x => new {x.RoleId, x.ModuleId});
                     table.ForeignKey(
-                        name: "FK_RoleServiceMap_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
+                        "FK_RoleModuleMap_Modules_ModuleId",
+                        x => x.ModuleId,
+                        "Modules",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleServiceMap_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        "FK_RoleModuleMap_Roles_RoleId",
+                        x => x.RoleId,
+                        "Roles",
+                        "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                "RoleServiceMap",
+                table => new
+                {
+                    RoleId = table.Column<int>(),
+                    ServiceId = table.Column<int>()
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleServiceMap", x => new {x.RoleId, x.ServiceId});
+                    table.ForeignKey(
+                        "FK_RoleServiceMap_Roles_RoleId",
+                        x => x.RoleId,
+                        "Roles",
+                        "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        "FK_RoleServiceMap_Services_ServiceId",
+                        x => x.ServiceId,
+                        "Services",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupRoleMap_GroupId",
-                table: "GroupRoleMap",
-                column: "GroupId");
+                "IX_GroupRoleMap_GroupId",
+                "GroupRoleMap",
+                "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleModuleMap_ModuleId",
-                table: "RoleModuleMap",
-                column: "ModuleId");
+                "IX_RoleModuleMap_ModuleId",
+                "RoleModuleMap",
+                "ModuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleServiceMap_ServiceId",
-                table: "RoleServiceMap",
-                column: "ServiceId");
+                "IX_RoleServiceMap_ServiceId",
+                "RoleServiceMap",
+                "ServiceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GroupRoleMap");
+                "GroupRoleMap");
 
             migrationBuilder.DropTable(
-                name: "RoleModuleMap");
+                "RoleModuleMap");
 
             migrationBuilder.DropTable(
-                name: "RoleServiceMap");
+                "RoleServiceMap");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                "Groups");
 
             migrationBuilder.DropTable(
-                name: "Modules");
+                "Modules");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                "Roles");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                "Services");
         }
     }
 }

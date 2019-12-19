@@ -4,7 +4,7 @@ using Doggy.Learning.Infrastructure.Interfaces;
 
 namespace Doggy.Learning.Auth.Domain.Interfaces
 {
-    public abstract class GroupRepositoryBase : CrudRepository<Group, AuthContext> 
+    public abstract class GroupRepositoryBase : CrudRepository<Group, AuthContext>
     {
         protected GroupRepositoryBase(AuthContext context) : base(context)
         {

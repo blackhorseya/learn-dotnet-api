@@ -79,7 +79,7 @@ namespace Doggy.Learning.WebService
             services.AddSingleton(typeof(JwtHelper));
 
             #endregion
-            
+
             #region injection db context
 
             services.AddDbContextPool<AuthContext>(options =>
@@ -109,10 +109,7 @@ namespace Doggy.Learning.WebService
         {
             var appSettings = appSettingsOptions.Value;
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
             app.UseRouting();

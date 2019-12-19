@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using Doggy.Learning.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -41,7 +37,6 @@ namespace Doggy.Learning.Infrastructure.Filters
             // var isHeader = filterPipeline.Any(filter => filter.Filter is HeaderFilter);
 
             foreach (var header in _headers)
-            {
                 operation.Parameters.Add(new OpenApiParameter
                 {
                     In = ParameterLocation.Header,
@@ -49,10 +44,9 @@ namespace Doggy.Learning.Infrastructure.Filters
                     Required = true,
                     Schema = new OpenApiSchema
                     {
-                        Type = "string",
+                        Type = "string"
                     }
                 });
-            }
         }
     }
 }

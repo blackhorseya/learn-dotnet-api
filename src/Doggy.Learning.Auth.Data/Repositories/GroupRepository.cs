@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Doggy.Learning.Auth.Data.Repositories
 {
-    public class GroupRepository : GroupRepositoryBase 
+    public class GroupRepository : GroupRepositoryBase
     {
         public GroupRepository(AuthContext context) : base(context)
         {

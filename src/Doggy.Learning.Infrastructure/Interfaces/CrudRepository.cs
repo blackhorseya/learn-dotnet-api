@@ -42,11 +42,8 @@ namespace Doggy.Learning.Infrastructure.Interfaces
         public async Task<TEntity> DeleteAsync(int id)
         {
             var entity = await _context.Set<TEntity>().FindAsync(id);
-            if (entity == null)
-            {
-                return null;
-            }
-            
+            if (entity == null) return null;
+
             _context.Set<TEntity>().Remove(entity);
             await _context.SaveChangesAsync();
             return entity;

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.WebService.Models;
