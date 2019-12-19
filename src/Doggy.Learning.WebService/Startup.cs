@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Doggy.Learning.WebService
@@ -31,16 +32,15 @@ namespace Doggy.Learning.WebService
         {
             #region injection settings
 
-            var authSettingsSection = Configuration.GetSection(nameof(AppSettings));
-            services.Configure<AppSettings>(authSettingsSection);
-            var appSettings = authSettingsSection.Get<AppSettings>();
+            services.Configure<AppSettings>(Configuration);
+            var appSettings = services.BuildServiceProvider().GetService<IOptions<AppSettings>>().Value;
 
             #endregion
-            
+
             #region swagger settings
 
             services.AddCustomSwagger();
-            
+
             #endregion
 
             services.AddCors();
@@ -48,31 +48,36 @@ namespace Doggy.Learning.WebService
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(typeof(Startup));
 
-            #region injection db context
-            services.AddDbContextPool<AuthContext>(options =>
-                options.UseLazyLoadingProxies().UseMySql(appSettings.ConnectionString));
-            #endregion
-
             #region auth jwt
 
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
+            if (appSettings.Authentication.Enabled)
+            {
+                var key = Encoding.ASCII.GetBytes(appSettings.Authentication.Secret);
+                services.AddAuthentication(x =>
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
+                        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
+                    .AddJwtBearer(x =>
+                    {
+                        x.RequireHttpsMetadata = false;
+                        x.SaveToken = true;
+                        x.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(key),
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                        };
+                    });
+            }
+
+            #endregion
+
+            #region injection db context
+
+            services.AddDbContextPool<AuthContext>(options =>
+                options.UseLazyLoadingProxies().UseMySql(appSettings.ConnectionString));
 
             #endregion
 
@@ -93,8 +98,11 @@ namespace Doggy.Learning.WebService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            IOptions<AppSettings> appSettingsOptions)
         {
+            var appSettings = appSettingsOptions.Value;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -110,8 +118,11 @@ namespace Doggy.Learning.WebService
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            if (appSettings.Authentication.Enabled)
+            {
+                app.UseAuthentication();
+                app.UseAuthorization();
+            }
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

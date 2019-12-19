@@ -38,11 +38,11 @@ namespace Doggy.Learning.Auth.Business.Services
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(_appSettings.Authentication.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = group.GetClaimsIdentity(),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddHours(_appSettings.Authentication.Expired),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
