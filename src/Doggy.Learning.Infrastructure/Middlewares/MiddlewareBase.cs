@@ -1,8 +1,7 @@
-using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace Doggy.Learning.Infrastructure.Middlewares
 {
@@ -19,7 +18,7 @@ namespace Doggy.Learning.Infrastructure.Middlewares
         {
             // enable multiple read request body
             context.Request.EnableBuffering();
-            
+
             await HandleRequest(context);
             await Next(context);
             await HandleResponse(context);
@@ -27,24 +26,22 @@ namespace Doggy.Learning.Infrastructure.Middlewares
 
         protected virtual async Task HandleRequest(HttpContext context)
         {
-            
         }
 
         protected virtual async Task HandleResponse(HttpContext context)
         {
-            
         }
 
-        public async Task<object> GetRequestBody(HttpContext context)
+        public async Task<string> GetRequestBody(HttpContext context)
         {
-            string requestContent;
-            using (var reader = new StreamReader(context.Request.Body))
+            string rawBodyString;
+            using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, true, 1024, true))
             {
-                requestContent = await reader.ReadToEndAsync();
+                rawBodyString = await reader.ReadToEndAsync();
                 context.Request.Body.Seek(0, SeekOrigin.Begin);
             }
 
-            return JsonConvert.DeserializeObject(requestContent);
+            return rawBodyString;
         }
     }
 }

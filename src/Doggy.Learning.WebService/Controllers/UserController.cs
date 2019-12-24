@@ -26,7 +26,7 @@ namespace Doggy.Learning.WebService.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<ActionResult<UserResponse>> Authenticate([FromBody] AuthenticateRequest request)
+        public async Task<ActionResult<UserResponse>> Authenticate([FromHeader] string applicationName, [FromBody] AuthenticateRequest request)
         {
             var token = await _userService.Authenticate(request.Username, request.Password);
             if (string.IsNullOrEmpty(token))
