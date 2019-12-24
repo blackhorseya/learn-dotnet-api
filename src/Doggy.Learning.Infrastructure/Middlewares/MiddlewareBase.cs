@@ -16,12 +16,23 @@ namespace Doggy.Learning.Infrastructure.Middlewares
 
         public virtual async Task Invoke(HttpContext context)
         {
-            // enable multiple read request body
-            context.Request.EnableBuffering();
-
             await HandleRequest(context);
-            await Next(context);
-            await HandleResponse(context);
+
+            // temp original response stream
+            var originalRespStream = context.Response.Body;
+            using (var ms = new MemoryStream())
+            {
+                // replace the original response stream with a readable and writable stream
+                context.Response.Body = ms;
+                await Next(context);
+
+                await HandleResponse(context);
+
+                // copy fake stream to original response stream
+                ms.Position = 0;
+                await ms.CopyToAsync(originalRespStream);
+                context.Response.Body = originalRespStream;
+            }
         }
 
         protected virtual async Task HandleRequest(HttpContext context)
@@ -32,16 +43,33 @@ namespace Doggy.Learning.Infrastructure.Middlewares
         {
         }
 
-        public async Task<string> GetRequestBody(HttpContext context)
+        public async Task<string> ReadRequestBody(HttpContext context)
         {
-            string rawBodyString;
+            // enable multiple read request body
+            context.Request.EnableBuffering();
+
+            string bodyText;
             using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, true, 1024, true))
             {
-                rawBodyString = await reader.ReadToEndAsync();
-                context.Request.Body.Seek(0, SeekOrigin.Begin);
+                context.Request.Body.Position = 0;
+                bodyText = await reader.ReadToEndAsync();
+                context.Request.Body.Position = 0;
             }
 
-            return rawBodyString;
+            return bodyText;
+        }
+
+        public async Task<string> ReadResponseBody(HttpContext context)
+        {
+            string bodyText;
+            using (var reader = new StreamReader(context.Response.Body, Encoding.UTF8, true, 1024, true))
+            {
+                context.Response.Body.Position = 0;
+                bodyText = await reader.ReadToEndAsync();
+                context.Response.Body.Position = 0;
+            }
+
+            return bodyText;
         }
     }
 }
