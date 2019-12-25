@@ -25,8 +25,6 @@ namespace Doggy.Learning.Infrastructure.Helpers
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
-                c.OperationFilter<HeaderFilter>();
-
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",

@@ -6,6 +6,7 @@ using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Filters;
 using Doggy.Learning.Infrastructure.Helpers;
+using Doggy.Learning.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -126,6 +127,13 @@ namespace Doggy.Learning.WebService
                 app.UseAuthentication();
                 app.UseAuthorization();
             }
+
+            #region Middleware
+
+            app.UseExceptionHandleMiddleware();
+            app.UseRequestTrackerMiddleware();
+
+            #endregion
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
