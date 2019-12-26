@@ -41,7 +41,7 @@ namespace Doggy.Learning.WebService.Controllers
 
         [HttpGet]
         [Rbac(ModuleConstants.Management)]
-        public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
+        public async Task<ActionResult<IEnumerable<UserResponse>>> Get([FromHeader] string applicationName)
         {
             var groups = await _userService.FindAllAsync();
             var res = _mapper.Map<List<UserResponse>>(groups);
@@ -50,7 +50,7 @@ namespace Doggy.Learning.WebService.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<ActionResult<UserResponse>> Get(string name)
+        public async Task<ActionResult<UserResponse>> Get([FromHeader] string applicationName, string name)
         {
             if (name != User.Identity.Name && !User.IsInRole("admin"))
                 return Forbid();
