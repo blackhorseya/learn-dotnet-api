@@ -18,7 +18,7 @@ namespace Doggy.Learning.Infrastructure.Helpers
             var appDisplayName = configuration.TryGetAppInfoDisplayName();
             var appVersion = configuration.TryGetVersion();
             var authEnabled = configuration.TryGetAuthenticationEnabled();
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(appVersion, new OpenApiInfo
@@ -66,7 +66,7 @@ namespace Doggy.Learning.Infrastructure.Helpers
             var appDisplayName = configuration.GetAppInfoDisplayName();
             var appVersion = configuration.TryGetVersion();
             var virtualDirectory = configuration.TryGetVirtualDirectory();
-            
+
             app.UseSwagger(c =>
             {
                 c.PreSerializeFilters.Add((swagger, httpReq) =>

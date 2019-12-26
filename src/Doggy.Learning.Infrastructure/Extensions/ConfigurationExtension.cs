@@ -14,7 +14,7 @@ namespace Doggy.Learning.Infrastructure.Extensions
 
             return appInfoDisplayName;
         }
-        
+
         public static string TryGetAppInfoDisplayName(this IConfiguration configuration)
         {
             return configuration.GetValue(AppSettingsConstants.AppInfoDisplayName, string.Empty);
