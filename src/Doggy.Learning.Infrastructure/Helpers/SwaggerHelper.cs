@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Doggy.Learning.Infrastructure.Constants;
+using Doggy.Learning.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,42 +15,46 @@ namespace Doggy.Learning.Infrastructure.Helpers
         public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
         {
             var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-            var appName = configuration.GetValue<string>(AppSettingsConstants.AppInfoName);
-            var appVersion = configuration.GetValue<string>(AppSettingsConstants.AppInfoVersion);
+            var appDisplayName = configuration.TryGetAppInfoDisplayName();
+            var appVersion = configuration.TryGetVersion();
+            var authEnabled = configuration.TryGetAuthenticationEnabled();
             
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                c.SwaggerDoc(appVersion, new OpenApiInfo
                 {
-                    Title = "Learn .Net Core web api",
-                    Version = "v1"
+                    Title = appDisplayName,
+                    Version = appVersion
                 });
 
                 var xmlFile = $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                if (authEnabled)
                 {
-                    Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+                    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                     {
-                        new OpenApiSecurityScheme
+                        Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
+                        Name = "Authorization",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.ApiKey
+                    });
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
                         {
-                            Reference = new OpenApiReference
+                            new OpenApiSecurityScheme
                             {
-                                Id = "Bearer",
-                                Type = ReferenceType.SecurityScheme
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
+                                Reference = new OpenApiReference
+                                {
+                                    Id = "Bearer",
+                                    Type = ReferenceType.SecurityScheme
+                                }
+                            },
+                            Array.Empty<string>()
+                        }
+                    });
+                }
             });
 
             return services;
@@ -58,18 +62,25 @@ namespace Doggy.Learning.Infrastructure.Helpers
 
         public static IApplicationBuilder UseCustomSwagger(this IApplicationBuilder app)
         {
+            var configuration = app.ApplicationServices.GetService<IConfiguration>();
+            var appDisplayName = configuration.GetAppInfoDisplayName();
+            var appVersion = configuration.TryGetVersion();
+            var virtualDirectory = configuration.TryGetVirtualDirectory();
+            
             app.UseSwagger(c =>
             {
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
                     swagger.Servers = new List<OpenApiServer>
-                        {new OpenApiServer {Url = $"{httpReq.Scheme}://{httpReq.Host.Value}"}};
+                    {
+                        new OpenApiServer {Url = $"{httpReq.Scheme}://{httpReq.Host.Value}"}
+                    };
                 });
             });
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint($"{virtualDirectory}swagger/v1/swagger.json", $"{appDisplayName} {appVersion}");
                 c.RoutePrefix = "docs";
             });
 
