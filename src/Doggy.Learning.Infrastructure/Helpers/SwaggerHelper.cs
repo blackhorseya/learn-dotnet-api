@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Doggy.Learning.Infrastructure.Filters;
+using Doggy.Learning.Infrastructure.Constants;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -13,6 +14,10 @@ namespace Doggy.Learning.Infrastructure.Helpers
     {
         public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
         {
+            var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+            var appName = configuration.GetValue<string>(AppSettingsConstants.AppInfoName);
+            var appVersion = configuration.GetValue<string>(AppSettingsConstants.AppInfoVersion);
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
