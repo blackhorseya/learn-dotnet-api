@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Doggy.Learning.Infrastructure.Helpers
+namespace Doggy.Learning.Infrastructure.Entities
 {
     public class AppSettings
     {

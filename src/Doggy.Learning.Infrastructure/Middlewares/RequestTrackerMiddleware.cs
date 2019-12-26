@@ -19,13 +19,15 @@ namespace Doggy.Learning.Infrastructure.Middlewares
         protected override async Task HandleRequest(HttpContext context)
         {
             var body = await ReadRequestBody(context);
-            _logger.LogInformation("{@request_body}", JsonConvert.DeserializeObject(body));
+            if (!string.IsNullOrEmpty(body))
+                _logger.LogInformation("{@request_body}", JsonConvert.DeserializeObject(body));
         }
 
         protected override async Task HandleResponse(HttpContext context)
         {
             var body = await ReadResponseBody(context);
-            _logger.LogInformation("{@response_body}", JsonConvert.DeserializeObject(body));
+            if (!string.IsNullOrEmpty(body))
+                _logger.LogInformation("{@response_body}", JsonConvert.DeserializeObject(body));
         }
     }
 

@@ -1,4 +1,5 @@
 using Doggy.Learning.Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,10 +13,10 @@ namespace Doggy.Learning.Infrastructure.Helpers
             entity.Property(d => d.CreatedAt).ValueGeneratedOnAdd();
             entity.Property(d => d.UpdatedAt).ValueGeneratedOnAddOrUpdate();
 
-            entity.Property(d => d.CreatedAt).Metadata.BeforeSaveBehavior = PropertySaveBehavior.Ignore;
-            entity.Property(d => d.CreatedAt).Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
-            entity.Property(d => d.UpdatedAt).Metadata.BeforeSaveBehavior = PropertySaveBehavior.Ignore;
-            entity.Property(d => d.UpdatedAt).Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+            entity.Property(d => d.CreatedAt).Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            entity.Property(d => d.CreatedAt).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+            entity.Property(d => d.UpdatedAt).Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+            entity.Property(d => d.UpdatedAt).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             return entity;
         }
