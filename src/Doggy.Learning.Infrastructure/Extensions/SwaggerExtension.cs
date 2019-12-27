@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Doggy.Learning.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace Doggy.Learning.Infrastructure.Helpers
+namespace Doggy.Learning.Infrastructure.Extensions
 {
-    public static class SwaggerHelper
+    public static class SwaggerExtension
     {
         public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
         {
