@@ -33,8 +33,7 @@ namespace Doggy.Learning.Infrastructure.Middlewares
     {
         public static IApplicationBuilder UseExceptionHandleMiddleware(this IApplicationBuilder app)
         {
-            app.UseMiddleware<ExceptionHandleMiddleware>();
-            return app;
+            return app.UseMiddleware<ExceptionHandleMiddleware>();
         }
     }
 }

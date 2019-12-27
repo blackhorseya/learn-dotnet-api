@@ -35,8 +35,7 @@ namespace Doggy.Learning.Infrastructure.Middlewares
     {
         public static IApplicationBuilder UseRequestTrackerMiddleware(this IApplicationBuilder app)
         {
-            app.UseMiddleware<RequestTrackerMiddleware>();
-            return app;
+            return app.UseMiddleware<RequestTrackerMiddleware>();
         }
     }
 }
