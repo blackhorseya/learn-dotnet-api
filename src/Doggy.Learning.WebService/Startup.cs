@@ -5,7 +5,6 @@ using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Entities;
-using Doggy.Learning.Infrastructure.Extensions;
 using Doggy.Learning.Infrastructure.Filters;
 using Doggy.Learning.Infrastructure.Helpers;
 using Doggy.Learning.Infrastructure.Middlewares;

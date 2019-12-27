@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace Doggy.Learning.Infrastructure.Extensions
+namespace Doggy.Learning.Infrastructure.Helpers
 {
-    public static class SwaggerExtension
+    public static class SwaggerHelper
     {
         public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
         {

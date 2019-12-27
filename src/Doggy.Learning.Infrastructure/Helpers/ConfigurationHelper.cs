@@ -2,9 +2,9 @@ using System;
 using Doggy.Learning.Infrastructure.Constants;
 using Microsoft.Extensions.Configuration;
 
-namespace Doggy.Learning.Infrastructure.Extensions
+namespace Doggy.Learning.Infrastructure.Helpers
 {
-    public static class ConfigurationExtension
+    public static class ConfigurationHelper
     {
         public static string GetAppInfoDisplayName(this IConfiguration configuration)
         {
