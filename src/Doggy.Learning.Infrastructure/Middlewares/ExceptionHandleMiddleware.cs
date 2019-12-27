@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Doggy.Learning.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -8,9 +9,9 @@ namespace Doggy.Learning.Infrastructure.Middlewares
 {
     public class ExceptionHandleMiddleware : MiddlewareBase
     {
-        private readonly ILogger<ExceptionHandleMiddleware> _logger;
+        private readonly ILogWrapper _logger;
 
-        public ExceptionHandleMiddleware(ILogger<ExceptionHandleMiddleware> logger, RequestDelegate next)
+        public ExceptionHandleMiddleware(ILogWrapper logger, RequestDelegate next)
             : base(next)
         {
             _logger = logger;
@@ -24,7 +25,8 @@ namespace Doggy.Learning.Infrastructure.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.ToString());
+                // _logger.Exception(ex, ex.ToString());
+                _logger.Exception(ex);
             }
         }
     }

@@ -39,6 +39,8 @@ namespace Doggy.Learning.WebService
 
             #endregion
 
+            services.UseLogWrapper();
+
             #region swagger settings
 
             services.AddCustomSwagger();

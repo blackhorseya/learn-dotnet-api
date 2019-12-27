@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Doggy.Learning.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -8,11 +9,12 @@ namespace Doggy.Learning.Infrastructure.Middlewares
 {
     public class RequestTrackerMiddleware : MiddlewareBase
     {
-        private readonly ILogger<RequestTrackerMiddleware> _logger;
+        private readonly ILogWrapper _logger;
 
-        public RequestTrackerMiddleware(ILogger<RequestTrackerMiddleware> logger, RequestDelegate next)
+        public RequestTrackerMiddleware(ILogWrapper logger, RequestDelegate next)
             : base(next)
         {
+            _logger = logger;
             _logger = logger;
         }
 
@@ -20,14 +22,16 @@ namespace Doggy.Learning.Infrastructure.Middlewares
         {
             var body = await ReadRequestBody(context);
             if (!string.IsNullOrEmpty(body))
-                _logger.LogInformation("{@request_body}", JsonConvert.DeserializeObject(body));
+                // _logger.TraceRequestWithMessage("{@request_body}", JsonConvert.DeserializeObject(body));
+                _logger.TraceRequestWithMessage("test trace request");
         }
 
         protected override async Task HandleResponse(HttpContext context)
         {
             var body = await ReadResponseBody(context);
             if (!string.IsNullOrEmpty(body))
-                _logger.LogInformation("{@response_body}", JsonConvert.DeserializeObject(body));
+                // _logger.LogInformation("{@response_body}", JsonConvert.DeserializeObject(body));
+                _logger.TraceRequestWithMessage("test trace response");
         }
     }
 
