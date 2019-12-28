@@ -1,4 +1,4 @@
-using System.Text.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Doggy.Extensions.Logger;
 using Microsoft.AspNetCore.Builder;
@@ -20,14 +20,17 @@ namespace Doggy.Extensions.Middlewares
 
         protected override async Task HandleResponse(HttpContext context)
         {
+            var args = new List<(string, object)>();
+            
             var reqBody = await ReadRequestBody(context);
+            if (!string.IsNullOrEmpty(reqBody))
+                args.Add((Logger.Constants.Properties.RequestBody, JsonConvert.DeserializeObject(reqBody)));
+            
             var respBody = await ReadResponseBody(context);
             if (!string.IsNullOrEmpty(respBody))
-                _logger.TraceRequest(("response", JsonConvert.DeserializeObject(respBody)));
-            else
-            {
-                _logger.TraceRequest();
-            }
+                args.Add((Logger.Constants.Properties.ResponseBody, JsonConvert.DeserializeObject(respBody)));
+            
+            _logger.TraceRequest(args.ToArray());
         }
     }
 

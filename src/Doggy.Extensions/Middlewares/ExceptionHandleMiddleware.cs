@@ -24,7 +24,6 @@ namespace Doggy.Extensions.Middlewares
             }
             catch (Exception ex)
             {
-                // _logger.Exception(ex, ex.ToString());
                 _logger.Exception(ex);
             }
         }

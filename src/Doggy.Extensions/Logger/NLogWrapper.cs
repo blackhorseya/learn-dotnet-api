@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 
@@ -6,23 +7,22 @@ namespace Doggy.Extensions.Logger
 {
     public class NLogWrapper : ILogWrapper
     {
-        private readonly ILogger _exceptionLogger;
-        private readonly ILogger _requestLogger;
+        private readonly ILogger _logger;
 
         public NLogWrapper()
         {
-            _exceptionLogger = LogManager.GetLogger(Constants.ExceptionHandler);
-            _requestLogger = LogManager.GetLogger(Constants.RequestTracker);
+            _logger = LogManager.GetLogger(Constants.Logger.ConsoleLogger);
         }
 
-        public void Exception(Exception ex)
+        public void Exception(Exception ex, params (string, object)[] args)
         {
-            _exceptionLogger.Error(ex);
+            ExceptionWithMessage(string.Empty, ex, args);
         }
 
-        public void ExceptionWithMessage(Exception ex, string message)
+        public void ExceptionWithMessage(string message, Exception ex, params (string, object)[] args)
         {
-            _exceptionLogger.Error(ex, message);
+            var (keys, values) = args.AddCategoryAndMessage(Constants.Category.ExceptionHandler, message).ConvertToNLog();
+            _logger.Error(ex, keys, values);
         }
 
         public void TraceRequest(params (string, object)[] args)
@@ -32,21 +32,8 @@ namespace Doggy.Extensions.Logger
 
         public void TraceRequestWithMessage(string message, params (string, object)[] args)
         {
-            if (args.Length == 0)
-            {
-                _requestLogger.Info(message);
-            }
-            else
-            {
-                var keys = string.Join("", args.Select(x => $"{{@{x.Item1}}}").ToList());
-                var values = args.Select(x => x.Item2).ToList();
-                if (!string.IsNullOrEmpty(message))
-                {
-                    keys = $"{message} {keys}";
-                }
-
-                _requestLogger.Info(keys, values.ToArray());
-            }
+            var (keys, values) = args.AddCategoryAndMessage(Constants.Category.RequestTracker, message).ConvertToNLog();
+            _logger.Info(keys, values);
         }
     }
 }
