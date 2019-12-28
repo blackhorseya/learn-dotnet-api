@@ -75,7 +75,7 @@ namespace Doggy.Extensions.Swagger
                 {
                     swagger.Servers = new List<OpenApiServer>
                     {
-                        new OpenApiServer {Url = $"{httpReq.Scheme}://{httpReq.Host.Value}"}
+                        new OpenApiServer {Url = "/"}
                     };
                 });
             });
