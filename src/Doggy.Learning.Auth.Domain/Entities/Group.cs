@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Doggy.Learning.Infrastructure.Interfaces;
+using Doggy.Extensions.EntityFramework.Entity;
 
 namespace Doggy.Learning.Auth.Domain.Entities
 {

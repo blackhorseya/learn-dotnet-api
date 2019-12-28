@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
-using Doggy.Learning.Infrastructure.Entities;
+using Doggy.Extensions.Configuration.Request;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Doggy.Learning.Infrastructure.Filters
+namespace Doggy.Extensions.Filters
 {
-    public class HeaderFilter : IAuthorizationFilter, IOperationFilter
+    public class RequestHeaderFilter : IAuthorizationFilter, IOperationFilter
     {
         private readonly List<string> _headers;
-
-        public HeaderFilter(IOptions<AppSettings> appSettings)
+        
+        public RequestHeaderFilter(IConfiguration configuration)
         {
-            _headers = appSettings.Value.RequiredHeaders;
+            _headers = configuration.TryGetRequiredHeaders();
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)

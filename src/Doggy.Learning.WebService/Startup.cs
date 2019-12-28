@@ -1,13 +1,15 @@
 using System.Text;
 using AutoMapper;
+using Doggy.Extensions.Filters;
+using Doggy.Extensions.Jwt;
+using Doggy.Extensions.Logger;
+using Doggy.Extensions.Middlewares;
+using Doggy.Extensions.Swagger;
 using Doggy.Learning.Auth.Business.Services;
 using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Entities;
-using Doggy.Learning.Infrastructure.Filters;
-using Doggy.Learning.Infrastructure.Helpers;
-using Doggy.Learning.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,6 +41,8 @@ namespace Doggy.Learning.WebService
 
             #endregion
 
+            services.AddLogWrapper();
+
             #region swagger settings
 
             services.AddCustomSwagger();
@@ -46,7 +50,7 @@ namespace Doggy.Learning.WebService
             #endregion
 
             services.AddCors();
-            services.AddControllers(options => { options.Filters.Add<HeaderFilter>(); })
+            services.AddControllers(options => { options.Filters.Add<RequestHeaderFilter>(); })
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(typeof(Startup));
 
@@ -78,7 +82,7 @@ namespace Doggy.Learning.WebService
 
             #region injection helper
 
-            services.AddSingleton(typeof(JwtHelper));
+            services.AddJwtHelpers();
 
             #endregion
 

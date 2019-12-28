@@ -28,9 +28,12 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
-          - name: appsettings-volume
+          - name: appsettings-config-volume
             mountPath: /app/appsettings.json
             subPath: appsettings.json
+          - name: nlog-config-volume
+            mountPath: /app/nlog.config
+            subPath: nlog.config
           ports:
             - name: http
               containerPort: 80
@@ -46,9 +49,12 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: appsettings-volume
+        - name: appsettings-config-volume
           configMap:
-            name: {{ .Release.Name }}-configmap
+            name: {{ .Release.Name }}-appsettings-configmap
+        - name: nlog-config-volume
+          configMap:
+            name: {{ .Release.Name }}-nlog-configmap
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

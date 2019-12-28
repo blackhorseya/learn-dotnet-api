@@ -13,7 +13,7 @@ namespace Doggy.Learning.Auth.Data.Repositories
 
         public override async Task<Role> FindByNameAsync(string name)
         {
-            return await _context.Roles.FirstAsync(r => r.Name == name);
+            return await Context.Roles.FirstAsync(r => r.Name == name);
         }
     }
 }
