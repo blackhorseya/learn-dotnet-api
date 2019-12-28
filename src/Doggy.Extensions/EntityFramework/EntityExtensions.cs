@@ -1,11 +1,11 @@
-using Doggy.Learning.Infrastructure.Interfaces;
+using Doggy.Extensions.EntityFramework.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Doggy.Learning.Infrastructure.Helpers
+namespace Doggy.Extensions.EntityFramework
 {
-    public static class EntityHelper
+    public static class EntityExtensions
     {
         public static EntityTypeBuilder<TEntity> UseTimestampedProperty<TEntity>(this EntityTypeBuilder<TEntity> entity)
             where TEntity : class, ITimestampedEntity

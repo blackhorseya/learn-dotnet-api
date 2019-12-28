@@ -1,4 +1,4 @@
-using Doggy.Learning.Infrastructure.Helpers;
+using Doggy.Extensions.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 namespace Doggy.Learning.Auth.Domain.Entities

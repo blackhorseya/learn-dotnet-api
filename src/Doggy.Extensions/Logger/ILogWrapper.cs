@@ -1,6 +1,6 @@
 using System;
 
-namespace Doggy.Learning.Infrastructure.Interfaces
+namespace Doggy.Extensions.Logger
 {
     public interface ILogWrapper
     {

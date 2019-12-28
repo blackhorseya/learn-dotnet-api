@@ -1,9 +1,7 @@
 using System;
-using Doggy.Learning.Infrastructure.Constants;
-using Doggy.Learning.Infrastructure.Interfaces;
 using NLog;
 
-namespace Doggy.Learning.Infrastructure.Entities
+namespace Doggy.Extensions.Logger
 {
     public class NLogWrapper : ILogWrapper
     {

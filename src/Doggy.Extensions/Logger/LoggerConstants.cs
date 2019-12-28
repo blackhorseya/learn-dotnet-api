@@ -1,4 +1,4 @@
-namespace Doggy.Learning.Infrastructure.Constants
+namespace Doggy.Extensions.Logger
 {
     public static class LoggerConstants
     {

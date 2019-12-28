@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Doggy.Extensions.EntityFramework.Entity;
 
-namespace Doggy.Learning.Infrastructure.Interfaces
+namespace Doggy.Extensions.EntityFramework.Repository
 {
     public interface IRepository<T> where T : class, IEntity
     {

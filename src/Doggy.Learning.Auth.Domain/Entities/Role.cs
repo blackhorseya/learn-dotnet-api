@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Doggy.Learning.Infrastructure.Interfaces;
+using Doggy.Extensions.EntityFramework.Entity;
 
 namespace Doggy.Learning.Auth.Domain.Entities
 {

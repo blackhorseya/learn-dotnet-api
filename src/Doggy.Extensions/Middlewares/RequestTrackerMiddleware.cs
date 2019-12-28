@@ -1,11 +1,9 @@
 using System.Threading.Tasks;
-using Doggy.Learning.Infrastructure.Interfaces;
+using Doggy.Extensions.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
-namespace Doggy.Learning.Infrastructure.Middlewares
+namespace Doggy.Extensions.Middlewares
 {
     public class RequestTrackerMiddleware : MiddlewareBase
     {

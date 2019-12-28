@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Doggy.Learning.Infrastructure.Middlewares
+namespace Doggy.Extensions.Middlewares
 {
     public abstract class MiddlewareBase
     {

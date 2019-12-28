@@ -2,29 +2,29 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Doggy.Learning.Infrastructure.Entities;
-using Microsoft.Extensions.Options;
+using Doggy.Extensions.Configuration.Authentication;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Doggy.Learning.Infrastructure.Helpers
+namespace Doggy.Extensions.Jwt
 {
-    public class JwtHelper
+    public class Helpers
     {
-        private readonly AppSettings _appSettings;
+        private readonly IConfiguration _configuration;
 
-        public JwtHelper(IOptions<AppSettings> appSettings)
+        public Helpers(IConfiguration configuration)
         {
-            _appSettings = appSettings.Value;
+            _configuration = configuration;
         }
 
         public string GenerateToken(ClaimsIdentity claimsIdentity)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Authentication.Secret);
+            var key = Encoding.ASCII.GetBytes(_configuration.TryGetAuthenticationSecret());
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
-                Expires = DateTime.UtcNow.AddHours(_appSettings.Authentication.Expired),
+                Expires = DateTime.UtcNow.AddHours(_configuration.TryGetAuthenticationExpired()),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };

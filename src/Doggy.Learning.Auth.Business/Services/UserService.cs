@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Doggy.Extensions.Jwt;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
-using Doggy.Learning.Infrastructure.Helpers;
 
 namespace Doggy.Learning.Auth.Business.Services
 {
     public class UserService : IUserService
     {
         private readonly GroupRepositoryBase _groupRepo;
-        private readonly JwtHelper _jwtHelper;
+        private readonly Helpers _helpers;
 
-        public UserService(GroupRepositoryBase groupRepo, JwtHelper jwtHelper)
+        public UserService(GroupRepositoryBase groupRepo, Helpers helpers)
         {
             _groupRepo = groupRepo;
-            _jwtHelper = jwtHelper;
+            _helpers = helpers;
         }
 
         public async Task<string> Authenticate(string username, string password)
@@ -27,7 +27,7 @@ namespace Doggy.Learning.Auth.Business.Services
             var group = await FindByNameAsync(username);
 
             // authentication successful so generate jwt token
-            return _jwtHelper.GenerateToken(group.GetClaimsIdentity());
+            return _helpers.GenerateToken(group.GetClaimsIdentity());
         }
 
         public async Task<Group> FindByIdAsync(int id)

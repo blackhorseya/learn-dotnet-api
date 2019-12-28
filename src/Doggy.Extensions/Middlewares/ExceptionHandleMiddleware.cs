@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Doggy.Learning.Infrastructure.Interfaces;
+using Doggy.Extensions.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
-namespace Doggy.Learning.Infrastructure.Middlewares
+namespace Doggy.Extensions.Middlewares
 {
     public class ExceptionHandleMiddleware : MiddlewareBase
     {
