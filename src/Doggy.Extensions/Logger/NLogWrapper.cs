@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using NLog;
 
 namespace Doggy.Extensions.Logger
@@ -7,11 +8,11 @@ namespace Doggy.Extensions.Logger
     {
         private readonly ILogger _exceptionLogger;
         private readonly ILogger _requestLogger;
-        
+
         public NLogWrapper()
         {
-            _exceptionLogger = LogManager.GetLogger(LoggerConstants.ExceptionHandler);
-            _requestLogger = LogManager.GetLogger(LoggerConstants.RequestTracker);
+            _exceptionLogger = LogManager.GetLogger(Constants.ExceptionHandler);
+            _requestLogger = LogManager.GetLogger(Constants.RequestTracker);
         }
 
         public void Exception(Exception ex)
@@ -21,17 +22,31 @@ namespace Doggy.Extensions.Logger
 
         public void ExceptionWithMessage(Exception ex, string message)
         {
-            throw new NotImplementedException();
+            _exceptionLogger.Error(ex, message);
         }
 
         public void TraceRequest(params (string, object)[] args)
         {
-            throw new NotImplementedException();
+            TraceRequestWithMessage(string.Empty, args);
         }
 
         public void TraceRequestWithMessage(string message, params (string, object)[] args)
         {
-            _requestLogger.Info(message);
+            if (args.Length == 0)
+            {
+                _requestLogger.Info(message);
+            }
+            else
+            {
+                var keys = string.Join("", args.Select(x => $"{{@{x.Item1}}}").ToList());
+                var values = args.Select(x => x.Item2).ToList();
+                if (!string.IsNullOrEmpty(message))
+                {
+                    keys = $"{message} {keys}";
+                }
+
+                _requestLogger.Info(keys, values.ToArray());
+            }
         }
     }
 }

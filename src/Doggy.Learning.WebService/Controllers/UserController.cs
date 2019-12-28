@@ -6,6 +6,7 @@ using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Constants;
 using Doggy.Learning.WebService.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doggy.Learning.WebService.Controllers
@@ -26,6 +27,7 @@ namespace Doggy.Learning.WebService.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Dictionary<string, string>))]
         public async Task<IActionResult> Authenticate([FromHeader] string applicationName,
             [FromBody] AuthenticateRequest request)
         {
@@ -33,7 +35,8 @@ namespace Doggy.Learning.WebService.Controllers
             if (string.IsNullOrEmpty(token))
                 return BadRequest(new {message = "Username or password is incorrect"});
 
-            return Ok(new Dictionary<string, string>
+            // todo: refactor return type
+            return new ObjectResult(new Dictionary<string, string>
             {
                 {"token", token}
             });

@@ -37,6 +37,8 @@ namespace Doggy.Extensions.Middlewares
 
         protected virtual async Task HandleRequest(HttpContext context)
         {
+            // enable multiple read request body
+            context.Request.EnableBuffering();
         }
 
         protected virtual async Task HandleResponse(HttpContext context)
@@ -45,9 +47,6 @@ namespace Doggy.Extensions.Middlewares
 
         public async Task<string> ReadRequestBody(HttpContext context)
         {
-            // enable multiple read request body
-            context.Request.EnableBuffering();
-
             string bodyText;
             using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, true, 1024, true))
             {
