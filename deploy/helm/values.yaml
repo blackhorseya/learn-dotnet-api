@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: blackhorseya/learn-dotnet
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""
