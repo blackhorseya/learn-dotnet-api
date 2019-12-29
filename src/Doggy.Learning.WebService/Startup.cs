@@ -1,11 +1,15 @@
 using System.Text;
 using AutoMapper;
+using Doggy.Extensions.Filters;
+using Doggy.Extensions.Jwt;
+using Doggy.Extensions.Logger;
+using Doggy.Extensions.Middlewares;
+using Doggy.Extensions.Swagger;
 using Doggy.Learning.Auth.Business.Services;
 using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
-using Doggy.Learning.Infrastructure.Filters;
-using Doggy.Learning.Infrastructure.Helpers;
+using Doggy.Learning.Infrastructure.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Doggy.Learning.WebService
@@ -31,48 +36,60 @@ namespace Doggy.Learning.WebService
         {
             #region injection settings
 
-            var authSettingsSection = Configuration.GetSection(nameof(AppSettings));
-            services.Configure<AppSettings>(authSettingsSection);
-            var appSettings = authSettingsSection.Get<AppSettings>();
+            services.Configure<AppSettings>(Configuration);
+            var appSettings = services.BuildServiceProvider().GetService<IOptions<AppSettings>>().Value;
 
             #endregion
-            
+
+            services.AddLogWrapper();
+
             #region swagger settings
 
             services.AddCustomSwagger();
-            
+
             #endregion
 
             services.AddCors();
-            services.AddControllers(options => { options.Filters.Add<HeaderFilter>(); })
+            services.AddControllers(options => { options.Filters.Add<RequestHeaderFilter>(); })
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(typeof(Startup));
 
-            #region injection db context
-            services.AddDbContextPool<AuthContext>(options =>
-                options.UseLazyLoadingProxies().UseMySql(appSettings.ConnectionString));
-            #endregion
-
             #region auth jwt
 
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
+            if (appSettings.Authentication.Enabled)
+            {
+                var key = Encoding.ASCII.GetBytes(appSettings.Authentication.Secret);
+                services.AddAuthentication(x =>
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
+                        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
+                    .AddJwtBearer(x =>
+                    {
+                        x.RequireHttpsMetadata = false;
+                        x.SaveToken = true;
+                        x.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(key),
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                        };
+                    });
+            }
+
+            #endregion
+
+            #region injection helper
+
+            services.AddJwtHelpers();
+
+            #endregion
+
+            #region injection db context
+
+            services.AddDbContextPool<AuthContext>(options =>
+                options.UseLazyLoadingProxies().UseMySql(appSettings.ConnectionString));
 
             #endregion
 
@@ -93,12 +110,12 @@ namespace Doggy.Learning.WebService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            IOptions<AppSettings> appSettingsOptions)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            var appSettings = appSettingsOptions.Value;
+
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
             app.UseRouting();
@@ -110,8 +127,18 @@ namespace Doggy.Learning.WebService
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            if (appSettings.Authentication.Enabled)
+            {
+                app.UseAuthentication();
+                app.UseAuthorization();
+            }
+
+            #region Middleware
+
+            app.UseExceptionHandleMiddleware();
+            app.UseRequestTrackerMiddleware();
+
+            #endregion
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Filters;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Constants;
 using Doggy.Learning.WebService.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Doggy.Learning.WebService.Controllers
@@ -30,13 +27,16 @@ namespace Doggy.Learning.WebService.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<ActionResult<UserResponse>> Authenticate([FromBody] AuthenticateRequest request)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Dictionary<string, string>))]
+        public async Task<IActionResult> Authenticate([FromHeader] string applicationName,
+            [FromBody] AuthenticateRequest request)
         {
             var token = await _userService.Authenticate(request.Username, request.Password);
             if (string.IsNullOrEmpty(token))
                 return BadRequest(new {message = "Username or password is incorrect"});
 
-            return Ok(new Dictionary<string, string>
+            // todo: refactor return type
+            return new ObjectResult(new Dictionary<string, string>
             {
                 {"token", token}
             });
@@ -44,7 +44,7 @@ namespace Doggy.Learning.WebService.Controllers
 
         [HttpGet]
         [Rbac(ModuleConstants.Management)]
-        public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
+        public async Task<ActionResult<IEnumerable<UserResponse>>> Get([FromHeader] string applicationName)
         {
             var groups = await _userService.FindAllAsync();
             var res = _mapper.Map<List<UserResponse>>(groups);
@@ -53,7 +53,7 @@ namespace Doggy.Learning.WebService.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<ActionResult<UserResponse>> Get(string name)
+        public async Task<ActionResult<UserResponse>> Get([FromHeader] string applicationName, string name)
         {
             if (name != User.Identity.Name && !User.IsInRole("admin"))
                 return Forbid();
