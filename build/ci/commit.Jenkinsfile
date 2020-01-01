@@ -9,7 +9,7 @@ kind: Pod
 spec:
   containers:
   - name: dotnet-sdk
-    image: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+    image: blackhorseya/dotnet-builder:3.1-alpine
     command:
     - cat
     tty: true
