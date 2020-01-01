@@ -95,6 +95,13 @@ Application: ${APP_NAME}:${VERSION}
           /d:sonar.cs.opencover.reportsPaths=/coverage/coverage.opencover.xml \
           /d:sonar.coverage.exclusions=**/Entities/**/*,test/**/*
           """
+          sh '''
+          dotnet test /p:CollectCoverage=true \
+          /p:CoverletOutputFormat=opencover \
+          /p:CoverletOutput=$(pwd)/coverage/ \
+          --logger trx \
+          -r ./TestResults
+          '''
           sh "dotnet sonarscanner end /d:sonar.login=${SONARQUBE_PROJECT_TOKEN}"
         }
       }
