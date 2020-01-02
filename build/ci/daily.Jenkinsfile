@@ -92,7 +92,7 @@ Application: ${APP_NAME}:${VERSION}
           /d:sonar.host.url=${SONARQUBE_HOST_URL} \
           /d:sonar.login=${SONARQUBE_PROJECT_TOKEN} \
           /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
-          /d:sonar.cs.opencover.reportsPaths=/coverage/coverage.opencover.xml \
+          /d:sonar.cs.opencover.reportsPaths=${PWD}/coverage/coverage.opencover.xml \
           /d:sonar.coverage.exclusions=**/Entities/**/*,test/**/*
           """
           sh '''
