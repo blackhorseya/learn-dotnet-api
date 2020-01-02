@@ -62,6 +62,15 @@ Application: ${APP_NAME}:${VERSION}
     stage('Build') {
       steps {
         container('dotnet-builder') {
+            sh """
+            dotnet sonarscanner begin /k:\"${APP_NAME}\" \
+            /d:sonar.host.url=${SONARQUBE_HOST_URL} \
+            /d:sonar.login=${SONARQUBE_PROJECT_TOKEN} \
+            /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
+            /d:sonar.cs.opencover.reportsPaths=${PWD}/coverage/coverage.opencover.xml \
+            /d:sonar.coverage.exclusions=**/Entities/**/*,test/**/* \
+            /d:sonar.cs.vstest.reportsPaths=${PWD}/TestResults/report.trx
+            """
             sh 'dotnet build -c Release -o ./publish'
         }
       }
@@ -87,21 +96,6 @@ Application: ${APP_NAME}:${VERSION}
     stage('Static Code Analysis') {
       steps {
         container('dotnet-builder') {
-          sh """
-          dotnet sonarscanner begin /k:\"${APP_NAME}\" \
-          /d:sonar.host.url=${SONARQUBE_HOST_URL} \
-          /d:sonar.login=${SONARQUBE_PROJECT_TOKEN} \
-          /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
-          /d:sonar.cs.opencover.reportsPaths=${PWD}/coverage/coverage.opencover.xml \
-          /d:sonar.coverage.exclusions=**/Entities/**/*,test/**/*
-          """
-          sh '''
-          dotnet test /p:CollectCoverage=true \
-          /p:CoverletOutputFormat=opencover \
-          /p:CoverletOutput=$(pwd)/coverage/ \
-          --logger trx \
-          -r ./TestResults
-          '''
           sh "dotnet sonarscanner end /d:sonar.login=${SONARQUBE_PROJECT_TOKEN}"
         }
       }
