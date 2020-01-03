@@ -85,7 +85,7 @@ Application: ${APP_NAME}:${VERSION}
           /p:CoverletOutputFormat=opencover \
           /p:CoverletOutput=$(pwd)/coverage/ \
           --logger trx \
-          -r ./TestResults \
+          -r ./TestResults/report.trx \
           -o ./publish \
           --no-build --no-restore
           '''
