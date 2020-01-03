@@ -64,6 +64,7 @@ Application: ${APP_NAME}:${VERSION}
         container('dotnet-builder') {
             sh """
             dotnet sonarscanner begin /k:\"${APP_NAME}\" \
+            /v:${VERSION} \
             /d:sonar.host.url=${SONARQUBE_HOST_URL} \
             /d:sonar.login=${SONARQUBE_PROJECT_TOKEN} \
             /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
