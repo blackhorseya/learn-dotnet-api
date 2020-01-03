@@ -19,8 +19,7 @@ spec:
   containers:
   - name: dotnet-builder
     image: blackhorseya/dotnet-builder:3.1-alpine
-    command:
-    - cat
+    command: ['cat']
     tty: true
   - name: docker
     image: docker:latest
@@ -29,10 +28,25 @@ spec:
     volumeMounts:
     - name: dockersock
       mountPath: /var/run/docker.sock
+  - name: helm
+    image: alpine/helm:3.0.1
+    command: ['cat']
+    tty: true
+    volumeMounts:
+    - name: kubeconfig
+      mountPath: /root/.kube
+    - name: helmconfig
+      mountPaht: /root/.helm
   volumes:
   - name: dockersock
     hostPath:
       path: /var/run/docker.sock
+  - name: kubeconfig
+    hostPath:
+      path: ~/.kube
+  - name: helmconfig
+    hostPath:
+      path: ~/.helm
 """
     }
   }
@@ -53,6 +67,10 @@ Application: ${APP_NAME}:${VERSION}
         container('docker') {
             sh 'docker info'
             sh 'docker version'
+        }
+
+        container('helm') {
+            sh 'helm version'
         }
         
         sh 'printenv'
@@ -123,7 +141,10 @@ IMAGE_NAME: ${IMAGE_NAME}
 
     stage('Deploy to dev') {
       steps {
-        echo "deploy to dev for latest version"
+          container('helm') {
+              echo "deploy to dev for latest version"
+              sh "helm list --all-namespaces"
+          }
       }
     }
   }
