@@ -36,17 +36,17 @@ spec:
     - name: kubeconfig
       mountPath: /root/.kube
     - name: helmconfig
-      mountPaht: /root/.helm
+      mountPath: /root/.helm
   volumes:
   - name: dockersock
     hostPath:
       path: /var/run/docker.sock
   - name: kubeconfig
     hostPath:
-      path: ~/.kube
+      path: /home/doggy/.kube
   - name: helmconfig
     hostPath:
-      path: ~/.helm
+      path: /home/doggy/.helm
 """
     }
   }
