@@ -5,6 +5,7 @@ pipeline {
     PATH = "/root/.dotnet/tools:$PATH"
     APP_NAME = 'learn-dotnet'
     VERSION = "1.0.0.${BUILD_ID}"
+    KUBE_NS = "test"
     DOCKERHUB = credentials('docker-hub-credential')
     IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
     SONARQUBE_PROJECT_TOKEN = "592aa9db739ff07b3b3998baada2d4d1b786d2af"
@@ -139,11 +140,11 @@ IMAGE_NAME: ${IMAGE_NAME}
         }
     }
 
-    stage('Deploy to dev') {
+    stage('Deploy') {
       steps {
           container('helm') {
               echo "deploy to dev for latest version"
-              sh "helm list --all-namespaces"
+              sh "helm upgrade --install ${APP_NAME} --namespace=${KUBE_NS} deploy/helm"
           }
       }
     }
