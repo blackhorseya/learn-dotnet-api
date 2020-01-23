@@ -10,6 +10,7 @@ pipeline {
     IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
     SONARQUBE_TOKEN = credentials('sonarqube-token')
     SONARQUBE_HOST_URL = "https://sonar.blackhorseya.space"
+    KUBE_CONFIG_FILE = credentials('kube-config')
   }
   agent {
     kubernetes {
@@ -33,21 +34,10 @@ spec:
     image: alpine/helm:3.0.1
     command: ['cat']
     tty: true
-    volumeMounts:
-    - name: kubeconfig
-      mountPath: /root/.kube
-    - name: helmconfig
-      mountPath: /root/.helm
   volumes:
   - name: dockersock
     hostPath:
       path: /var/run/docker.sock
-  - name: kubeconfig
-    hostPath:
-      path: /home/doggy/.kube
-  - name: helmconfig
-    hostPath:
-      path: /home/doggy/.helm
 """
     }
   }
@@ -60,6 +50,7 @@ Repo: ${env.GIT_URL}
 Branch: ${env.GIT_BRANCH}
 Application: ${APP_NAME}:${VERSION}
 """
+        sh 'printenv'
         
         container('dotnet-builder') {
             sh 'dotnet --info'
@@ -72,9 +63,8 @@ Application: ${APP_NAME}:${VERSION}
 
         container('helm') {
             sh 'helm version'
+            sh 'mkdir -p /root/.kube/ && cp $KUBE_CONFIG_FILE /root/.kube/config'
         }
-        
-        sh 'printenv'
       }
     }
 
