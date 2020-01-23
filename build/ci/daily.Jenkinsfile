@@ -5,7 +5,7 @@ pipeline {
     PATH = "/root/.dotnet/tools:$PATH"
     APP_NAME = 'learn-dotnet'
     VERSION = "1.0.0.${BUILD_ID}"
-    KUBE_NS = "test"
+    KUBE_NS = "default"
     DOCKERHUB = credentials('docker-hub-credential')
     IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
     SONARQUBE_PROJECT_TOKEN = "25cce7f3619248512053f038c273782e334ffc35"
