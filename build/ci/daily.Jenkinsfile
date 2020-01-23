@@ -8,7 +8,7 @@ pipeline {
     KUBE_NS = "test"
     DOCKERHUB = credentials('docker-hub-credential')
     IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
-    SONARQUBE_PROJECT_TOKEN = "4f4e8938299c91df25a78156a13bd6be1053d576"
+    SONARQUBE_PROJECT_TOKEN = "25cce7f3619248512053f038c273782e334ffc35"
     SONARQUBE_HOST_URL = "https://sonar.blackhorseya.space"
   }
   agent {
