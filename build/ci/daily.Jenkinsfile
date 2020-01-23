@@ -8,7 +8,7 @@ pipeline {
     KUBE_NS = "default"
     DOCKERHUB = credentials('docker-hub-credential')
     IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
-    SONARQUBE_PROJECT_TOKEN = "7bee2ee1e7071652a880621b60306cf71df5fd83"
+    SONARQUBE_TOKEN = credentials('sonarqube-token')
     SONARQUBE_HOST_URL = "https://sonar.blackhorseya.space"
   }
   agent {
@@ -85,7 +85,7 @@ Application: ${APP_NAME}:${VERSION}
             dotnet sonarscanner begin /k:\"${APP_NAME}\" \
             /v:${VERSION} \
             /d:sonar.host.url=${SONARQUBE_HOST_URL} \
-            /d:sonar.login=${SONARQUBE_PROJECT_TOKEN} \
+            /d:sonar.login=${SONARQUBE_TOKEN} \
             /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
             /d:sonar.cs.opencover.reportsPaths=${PWD}/coverage/coverage.opencover.xml \
             /d:sonar.coverage.exclusions=**/Entities/**/*,test/**/* \
@@ -116,7 +116,7 @@ Application: ${APP_NAME}:${VERSION}
     stage('Static Code Analysis') {
       steps {
         container('dotnet-builder') {
-          sh "dotnet sonarscanner end /d:sonar.login=${SONARQUBE_PROJECT_TOKEN}"
+          sh "dotnet sonarscanner end /d:sonar.login=${SONARQUBE_TOKEN}"
         }
       }
     }
