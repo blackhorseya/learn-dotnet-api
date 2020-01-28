@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AnalysisConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <SonarConfigDir>/Users/doggy/projects/learn-dotnet-api/.sonarqube/conf</SonarConfigDir>
+  <SonarOutputDir>/Users/doggy/projects/learn-dotnet-api/.sonarqube/out</SonarOutputDir>
+  <SonarBinDir>/Users/doggy/projects/learn-dotnet-api/.sonarqube/bin</SonarBinDir>
+  <SonarScannerWorkingDirectory>/Users/doggy/projects/learn-dotnet-api</SonarScannerWorkingDirectory>
+  <HasBeginStepCommandLineCredentials>true</HasBeginStepCommandLineCredentials>
+  <SonarQubeHostUrl>https://sonar.blackhorseya.space</SonarQubeHostUrl>
+  <SonarQubeVersion>7.9.1.27448</SonarQubeVersion>
+  <SonarProjectKey>learn-dotnet</SonarProjectKey>
+  <AdditionalConfig>
+    <ConfigSetting Id="BuildUri" />
+    <ConfigSetting Id="TfsUri" />
+    <ConfigSetting Id="settings.file.path" Value="/Users/doggy/.dotnet/tools/.store/dotnet-sonarscanner/4.8.0/dotnet-sonarscanner/4.8.0/tools/netcoreapp3.0/any/SonarQube.Analysis.xml" />
+  </AdditionalConfig>
+  <ServerSettings>
+    <Property Name="sonar.auth.github.loginStrategy">Same as GitHub login</Property>
+    <Property Name="sonaranalyzer-cs.nuget.packageVersion">8.2.0.14119</Property>
+    <Property Name="sonar.cs.ignoreHeaderComments">true</Property>
+    <Property Name="sonar.auth.github.enabled">true</Property>
+    <Property Name="sonar.dbcleaner.daysBeforeDeletingClosedIssues">30</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByMonth">52</Property>
+    <Property Name="sonar.lf.gravatarServerUrl">https://secure.gravatar.com/avatar/{EMAIL_MD5}.jpg?s={SIZE}&amp;d=identicon</Property>
+    <Property Name="email.fromName">SonarQube</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeKeepingOnlyAnalysesWithVersion">104</Property>
+    <Property Name="sonar.forceAuthentication">false</Property>
+    <Property Name="sonar.notifications.delay">60</Property>
+    <Property Name="sonaranalyzer-cs.staticResourceName">SonarAnalyzer-8.2.0.14119.zip</Property>
+    <Property Name="sonar.notifications.runningDelayBeforeReportingStatus">600</Property>
+    <Property Name="sonaranalyzer-cs.nuget.packageId">SonarAnalyzer.CSharp</Property>
+    <Property Name="sonar.auth.github.apiUrl">https://api.github.com/</Property>
+    <Property Name="sonaranalyzer-cs.ruleNamespace">SonarAnalyzer.CSharp</Property>
+    <Property Name="sonar.auth.github.allowUsersToSignUp">false</Property>
+    <Property Name="sonar.cs.analyzeGeneratedCode">false</Property>
+    <Property Name="sonar.authenticator.downcase">false</Property>
+    <Property Name="sonar.scm.disabled">false</Property>
+    <Property Name="sonar.builtInQualityProfiles.disableNotificationOnUpdate">false</Property>
+    <Property Name="sonar.dbcleaner.hoursBeforeKeepingOnlyOneSnapshotByDay">24</Property>
+    <Property Name="sonaranalyzer-cs.analyzerId">SonarAnalyzer.CSharp</Property>
+    <Property Name="sonar.organizations.createPersonalOrg">false</Property>
+    <Property Name="sonar.auth.github.webUrl">https://github.com/</Property>
+    <Property Name="sonar.organizations.anyoneCanCreate">false</Property>
+    <Property Name="sonar.technicalDebt.ratingGrid">0.05,0.1,0.2,0.5</Property>
+    <Property Name="sonar.cpd.cross_project">false</Property>
+    <Property Name="sonar.technicalDebt.developmentCost">30</Property>
+    <Property Name="email.from">noreply@nowhere</Property>
+    <Property Name="sonar.lf.enableGravatar">false</Property>
+    <Property Name="sonaranalyzer-cs.pluginVersion">8.2.0.14119</Property>
+    <Property Name="sonar.cs.file.suffixes">.cs</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeKeepingOnlyOneSnapshotByWeek">4</Property>
+    <Property Name="sonar.leak.period">previous_version</Property>
+    <Property Name="sonar.auth.github.groupsSync">false</Property>
+    <Property Name="email.prefix">[SONARQUBE]</Property>
+    <Property Name="sonar.cs.roslyn.ignoreIssues">false</Property>
+    <Property Name="sonaranalyzer-cs.pluginKey">csharp</Property>
+    <Property Name="sonar.dbcleaner.weeksBeforeDeletingAllSnapshots">260</Property>
+    <Property Name="sonar.updatecenter.url">https://update.sonarsource.org/update-center.properties</Property>
+    <Property Name="sonar.core.id">E204B718-AW_Ramc2OAGMvf25a2wQ</Property>
+    <Property Name="sonar.core.startTime">01/23/2020 16:42:05</Property>
+    <Property Name="sonar.core.serverBaseURL">https://sonar.blackhorseya.space</Property>
+  </ServerSettings>
+  <LocalSettings>
+    <Property Name="sonar.host.url">https://sonar.blackhorseya.space</Property>
+  </LocalSettings>
+  <AnalyzersSettings>
+    <AnalyzerSettings>
+      <Language>cs</Language>
+      <RuleSetFilePath>/Users/doggy/projects/learn-dotnet-api/.sonarqube/conf/SonarQubeRoslyn-cs.ruleset</RuleSetFilePath>
+      <TestProjectRuleSetFilePath>/Users/doggy/projects/learn-dotnet-api/.sonarqube/conf/SonarQubeRoslyn-cs-test.ruleset</TestProjectRuleSetFilePath>
+      <AnalyzerPlugins>
+        <AnalyzerPlugin Key="csharp" Version="8.2.0.14119" StaticResourceName="SonarAnalyzer-8.2.0.14119.zip">
+          <AssemblyPaths>
+            <Path>/var/folders/mt/d5b6qg_56g327sk5q_yvr4br0000gp/T/.sonarqube/resources/0/Google.Protobuf.dll</Path>
+            <Path>/var/folders/mt/d5b6qg_56g327sk5q_yvr4br0000gp/T/.sonarqube/resources/0/SonarAnalyzer.dll</Path>
+            <Path>/var/folders/mt/d5b6qg_56g327sk5q_yvr4br0000gp/T/.sonarqube/resources/0/SonarAnalyzer.CSharp.dll</Path>
+          </AssemblyPaths>
+        </AnalyzerPlugin>
+      </AnalyzerPlugins>
+      <AdditionalFilePaths>
+        <Path>/Users/doggy/projects/learn-dotnet-api/.sonarqube/conf/cs/SonarLint.xml</Path>
+      </AdditionalFilePaths>
+    </AnalyzerSettings>
+  </AnalyzersSettings>
+</AnalysisConfig>

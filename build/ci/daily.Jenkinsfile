@@ -5,8 +5,12 @@ pipeline {
     PATH = "/root/.dotnet/tools:$PATH"
     APP_NAME = 'learn-dotnet'
     VERSION = "1.0.0.${BUILD_ID}"
+    KUBE_NS = "default"
     DOCKERHUB = credentials('docker-hub-credential')
     IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
+    SONARQUBE_TOKEN = credentials('sonarqube-token')
+    SONARQUBE_HOST_URL = "https://sonar.blackhorseya.space"
+    KUBE_CONFIG_FILE = credentials('kube-config')
   }
   agent {
     kubernetes {
@@ -15,10 +19,9 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: dotnet-sdk
+  - name: dotnet-builder
     image: blackhorseya/dotnet-builder:3.1-alpine
-    command:
-    - cat
+    command: ['cat']
     tty: true
   - name: docker
     image: docker:latest
@@ -27,6 +30,10 @@ spec:
     volumeMounts:
     - name: dockersock
       mountPath: /var/run/docker.sock
+  - name: helm
+    image: alpine/helm:3.0.1
+    command: ['cat']
+    tty: true
   volumes:
   - name: dockersock
     hostPath:
@@ -43,8 +50,9 @@ Repo: ${env.GIT_URL}
 Branch: ${env.GIT_BRANCH}
 Application: ${APP_NAME}:${VERSION}
 """
+        sh 'printenv'
         
-        container('dotnet-sdk') {
+        container('dotnet-builder') {
             sh 'dotnet --info'
         }
         
@@ -52,14 +60,27 @@ Application: ${APP_NAME}:${VERSION}
             sh 'docker info'
             sh 'docker version'
         }
-        
-        sh 'printenv'
+
+        container('helm') {
+            sh 'helm version'
+            sh 'mkdir -p /root/.kube/ && cp $KUBE_CONFIG_FILE /root/.kube/config'
+        }
       }
     }
 
     stage('Build') {
       steps {
-        container('dotnet-sdk') {
+        container('dotnet-builder') {
+            sh """
+            dotnet sonarscanner begin /k:\"${APP_NAME}\" \
+            /v:${VERSION} \
+            /d:sonar.host.url=${SONARQUBE_HOST_URL} \
+            /d:sonar.login=${SONARQUBE_TOKEN} \
+            /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
+            /d:sonar.cs.opencover.reportsPaths=${PWD}/coverage/coverage.opencover.xml \
+            /d:sonar.coverage.exclusions=**/Entities/**/*,test/**/* \
+            /d:sonar.cs.vstest.reportsPaths=${PWD}/TestResults/report.trx
+            """
             sh 'dotnet build -c Release -o ./publish'
         }
       }
@@ -67,14 +88,14 @@ Application: ${APP_NAME}:${VERSION}
 
     stage('Test') {
       steps {
-        container('dotnet-sdk') {
+        container('dotnet-builder') {
           echo "perform dotnet test and generate test and coverage results"
           sh '''
           dotnet test /p:CollectCoverage=true \
           /p:CoverletOutputFormat=opencover \
-          /p:CoverletOutput=$(pwd)/TestResults/ \
+          /p:CoverletOutput=$(pwd)/coverage/ \
           --logger trx \
-          -r ./TestResults \
+          -r ./TestResults/report.trx \
           -o ./publish \
           --no-build --no-restore
           '''
@@ -84,10 +105,8 @@ Application: ${APP_NAME}:${VERSION}
 
     stage('Static Code Analysis') {
       steps {
-        container('dotnet-sdk') {
-//             sh 'dotnet sonarscanner begin'
-            echo "perform static code analysis"
-            echo "push coverage and test results to sonarqube"
+        container('dotnet-builder') {
+          sh "dotnet sonarscanner end /d:sonar.login=${SONARQUBE_TOKEN}"
         }
       }
     }
@@ -99,7 +118,7 @@ Application: ${APP_NAME}:${VERSION}
 IMAGE_NAME: ${IMAGE_NAME}
 """
 
-                sh "docker build -t ${IMAGE_NAME}:latest -f Dockerfile --network bridge ."
+                sh "docker build -t ${IMAGE_NAME}:latest -f Dockerfile --network host ."
                 sh "docker login --username ${DOCKERHUB_USR} --password ${DOCKERHUB_PSW}"
                 sh """
                 docker push ${IMAGE_NAME}:latest && \
@@ -111,9 +130,12 @@ IMAGE_NAME: ${IMAGE_NAME}
         }
     }
 
-    stage('Deploy to dev') {
+    stage('Deploy') {
       steps {
-        echo "deploy to dev for latest version"
+          container('helm') {
+              echo "deploy to dev for latest version"
+              sh "helm upgrade --install ${APP_NAME} --namespace=${KUBE_NS} deploy/helm"
+          }
       }
     }
   }
