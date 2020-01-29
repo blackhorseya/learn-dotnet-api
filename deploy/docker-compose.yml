@@ -12,12 +12,9 @@ services:
       MYSQL_DATABASE: accountDb
   api:
     container_name: api
-    image: blackhorseya/learning-netcore:latest
-    restart: always
-    build:
-      context: ../
-      dockerfile: Dockerfile
+    image: blackhorseya/learn-dotnet:latest
     ports:
       - 8080:80
     volumes:
       - ./appsettings.json:/app/appsettings.json
+      - ./nlog.config:/app/nlog.config
