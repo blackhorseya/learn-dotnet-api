@@ -47,7 +47,7 @@ ingress:
   hosts:
     - host: learn-dotnet.blackhorseya.space
       paths:
-        - backend:
+        - /
   tls:
     - secretName: blackhorseya-space-tls
       hosts:
