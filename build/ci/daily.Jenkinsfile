@@ -134,7 +134,7 @@ IMAGE_NAME: ${IMAGE_NAME}
       steps {
           container('helm') {
               echo "deploy to dev for latest version"
-              sh "helm upgrade --install ${APP_NAME} --namespace=${KUBE_NS} deploy/helm"
+              sh "helm upgrade --install dev-${APP_NAME} --namespace=${KUBE_NS} deploy/helm -f deploy/config/dev/values.yaml"
           }
       }
     }
