@@ -13,6 +13,7 @@ services:
   api:
     container_name: api
     image: blackhorseya/learn-dotnet:latest
+    restart: always
     ports:
       - 8080:80
     volumes:
