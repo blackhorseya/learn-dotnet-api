@@ -4,7 +4,8 @@ pipeline {
   environment {
     PATH = "/root/.dotnet/tools:$PATH"
     APP_NAME = 'learn-dotnet'
-    VERSION = "1.0.0.${BUILD_ID}"
+    VERSION = "1.0.0"
+    FULL_VERSION = "${VERSION}.${BUILD_ID}"
     KUBE_NS = "default"
     DOCKERHUB = credentials('docker-hub-credential')
     IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
@@ -48,7 +49,7 @@ spec:
 Perform ${JOB_NAME} for
 Repo: ${env.GIT_URL}
 Branch: ${env.GIT_BRANCH}
-Application: ${APP_NAME}:${VERSION}
+Application: ${APP_NAME}:${FULL_VERSION}
 """
         sh 'printenv'
         
@@ -73,7 +74,7 @@ Application: ${APP_NAME}:${VERSION}
         container('dotnet-builder') {
             sh """
             dotnet sonarscanner begin /k:\"${APP_NAME}\" \
-            /v:${VERSION} \
+            /v:${FULL_VERSION} \
             /d:sonar.host.url=${SONARQUBE_HOST_URL} \
             /d:sonar.login=${SONARQUBE_TOKEN} \
             /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
@@ -122,8 +123,8 @@ IMAGE_NAME: ${IMAGE_NAME}
                 sh "docker login --username ${DOCKERHUB_USR} --password ${DOCKERHUB_PSW}"
                 sh """
                 docker push ${IMAGE_NAME}:latest && \
-                docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${VERSION} && \
-                docker push ${IMAGE_NAME}:${VERSION}
+                docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${FULL_VERSION} && \
+                docker push ${IMAGE_NAME}:${FULL_VERSION}
                 """
                 sh "docker images --filter=reference='${IMAGE_NAME}:*'"
             }
@@ -138,7 +139,7 @@ IMAGE_NAME: ${IMAGE_NAME}
           }
           sshagent(['github-ssh']) {
               sh """
-              git tag --delete nightly && git tag nightly
+              git tag --delete v${VERSION}-alpha & git tag v${VERSION}-alpha
               git push --tags
               """
           }
@@ -156,7 +157,7 @@ IMAGE_NAME: ${IMAGE_NAME}
               "type": "section",
               "text": [
                 "type": "mrkdwn",
-                "text": "${prefixIcon} *<${BUILD_URL}|${JOB_NAME} #${VERSION}>*"
+                "text": "${prefixIcon} *<${BUILD_URL}|${JOB_NAME} #${FULL_VERSION}>*"
               ]
             ],
             [
