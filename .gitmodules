@@ -1,0 +1,3 @@
+[submodule "deploy/config"]
+	path = deploy/config
+	url = git@github.com:blackhorseya/learn-dotnet-api-config.git
