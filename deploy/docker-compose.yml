@@ -17,5 +17,5 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./appsettings.json:/app/appsettings.json
-      - ./nlog.config:/app/nlog.config
+      - ./config/local/appsettings.json:/app/appsettings.json
+      - ./config/local/nlog.config:/app/nlog.config
