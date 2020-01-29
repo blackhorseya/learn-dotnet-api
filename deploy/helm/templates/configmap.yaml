@@ -4,6 +4,10 @@ metadata:
   name: {{ .Release.Name }}-configmap
 data:
   appsettings.json: |-
-{{ .Files.Get "appsettings.json" | indent 4}}
+{{- if .Values.appsettings }}
+{{ tpl .Values.appsettings . | indent 4 }}
+{{- end }}
   nlog.config: |-
-{{ .Files.Get "nlog.config" | indent 4}}
+{{- if .Values.nlog }}
+{{ tpl .Values.nlog . | indent 4 }}
+{{- end }}
