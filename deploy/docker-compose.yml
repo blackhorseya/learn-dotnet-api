@@ -8,16 +8,14 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: 1234jk
+      MYSQL_ROOT_PASSWORD: changeme
       MYSQL_DATABASE: accountDb
   api:
     container_name: api
-    image: blackhorseya/learning-netcore:latest
+    image: blackhorseya/learn-dotnet:latest
     restart: always
-    build:
-      context: ../
-      dockerfile: Dockerfile
     ports:
       - 8080:80
     volumes:
-      - ./appsettings.json:/app/appsettings.json
+      - ./config/local/appsettings.json:/app/appsettings.json
+      - ./config/local/nlog.config:/app/nlog.config
