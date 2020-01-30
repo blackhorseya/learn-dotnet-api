@@ -139,7 +139,7 @@ IMAGE_NAME: ${IMAGE_NAME}
           }
           sshagent(['github-ssh']) {
               sh """
-              git push --delete origin v${VERSION}-alpha & git tag --delete v${VERSION}-alpha
+              git tag --delete v${VERSION}-alpha | exit 0 && git push --delete origin v${VERSION}-alpha | exit 0
               git tag v${VERSION}-alpha && git push --tags
               """
           }
