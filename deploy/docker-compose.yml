@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    container_name: db
+    container_name: accountDb
     image: mariadb
     restart: always
     ports:
@@ -10,8 +10,10 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: changeme
       MYSQL_DATABASE: accountDb
+    volumes:
+      - /Users/doggy/docker/data/accountDb:/var/lib/mysql
   api:
-    container_name: api
+    container_name: learn-dotnet-api
     image: blackhorseya/learn-dotnet:latest
     restart: always
     ports:
