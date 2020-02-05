@@ -11,15 +11,18 @@ using Doggy.Learning.Auth.Data.Repositories;
 using Doggy.Learning.Auth.Domain.Entities;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure.Entities;
+using Doggy.Learning.WebService.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Doggy.Learning.WebService
 {
@@ -47,6 +50,10 @@ namespace Doggy.Learning.WebService
             #region swagger settings
 
             services.AddCustomSwagger();
+            services.ConfigureSwaggerGen(c =>  c.ExampleFilters());
+
+            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateRequestBodyExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateResponseExample>();
 
             #endregion
 

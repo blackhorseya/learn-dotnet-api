@@ -8,6 +8,8 @@ using Doggy.Learning.WebService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Doggy.Learning.WebService.Controllers
 {
@@ -27,7 +29,9 @@ namespace Doggy.Learning.WebService.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Dictionary<string, string>))]
+        [SwaggerRequestExample(typeof(AuthenticateRequestBody), typeof(AuthenticateRequestBodyExample))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IDictionary<string, string>))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
         public async Task<IActionResult> Authenticate([FromQuery] RequestParametersBase param,
             [FromBody] AuthenticateRequestBody requestBody)
         {
