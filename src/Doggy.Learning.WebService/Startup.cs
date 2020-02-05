@@ -102,7 +102,7 @@ namespace Doggy.Learning.WebService
 
             #endregion
 
-            #region ingjection services
+            #region injection services
 
             services.AddScoped<IUserService, UserService>();
 

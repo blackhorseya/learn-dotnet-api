@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Doggy.Extensions.Swagger
 {
@@ -28,6 +29,8 @@ namespace Doggy.Extensions.Swagger
                     Title = appDisplayName,
                     Version = appVersion
                 });
+                
+                c.EnableAnnotations();
 
                 var xmlFile = $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
