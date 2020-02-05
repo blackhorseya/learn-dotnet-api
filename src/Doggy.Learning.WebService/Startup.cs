@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Text;
 using AutoMapper;
 using Doggy.Extensions.Filters;
@@ -50,7 +51,11 @@ namespace Doggy.Learning.WebService
             #endregion
 
             services.AddCors();
-            services.AddControllers(options => { options.Filters.Add<RequestHeaderFilter>(); })
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add<RequestHeaderFilter>();
+                    options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+                })
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(typeof(Startup));
 
