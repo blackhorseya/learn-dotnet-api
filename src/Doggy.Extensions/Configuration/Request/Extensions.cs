@@ -8,7 +8,7 @@ namespace Doggy.Extensions.Configuration.Request
     {
         public static List<string> TryGetRequiredHeaders(this IConfiguration configuration)
         {
-            return configuration.GetSection(Constants.RequiredHeaders).Get<string[]>().ToList();
+            return configuration.GetSection(Constants.RequiredHeaders).Get<string[]>()?.ToList() ?? new List<string>();
         }
     }
 }
