@@ -1,4 +1,4 @@
-namespace Doggy.Learning.Infrastructure.Constants
+namespace Doggy.Learning.Infrastructure
 {
     public class ModuleConstants
     {

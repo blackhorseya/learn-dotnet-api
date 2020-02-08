@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Doggy.Learning.Auth.Domain.Filters;
 using Doggy.Learning.Auth.Domain.Interfaces;
-using Doggy.Learning.Infrastructure.Constants;
+using Doggy.Learning.Infrastructure;
 using Doggy.Learning.WebService.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
