@@ -45,7 +45,7 @@ namespace Doggy.Extensions.Middlewares
         {
         }
 
-        public async Task<string> ReadRequestBody(HttpContext context)
+        protected async Task<string> ReadRequestBody(HttpContext context)
         {
             string bodyText;
             using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, true, 1024, true))
@@ -58,7 +58,7 @@ namespace Doggy.Extensions.Middlewares
             return bodyText;
         }
 
-        public async Task<string> ReadResponseBody(HttpContext context)
+        protected async Task<string> ReadResponseBody(HttpContext context)
         {
             string bodyText;
             using (var reader = new StreamReader(context.Response.Body, Encoding.UTF8, true, 1024, true))

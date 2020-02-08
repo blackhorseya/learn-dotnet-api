@@ -60,6 +60,7 @@ namespace Doggy.Learning.WebService
             services.AddCors();
             services.AddControllers(options =>
                 {
+                    options.Filters.Add<HttpResponseExceptionFilter>();
                     options.Filters.Add<RequestHeaderFilter>();
                     options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
                 })
@@ -147,7 +148,6 @@ namespace Doggy.Learning.WebService
 
             #region Middleware
 
-            app.UseExceptionHandleMiddleware();
             app.UseRequestTrackerMiddleware();
 
             #endregion

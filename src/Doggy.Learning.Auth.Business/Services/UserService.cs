@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Doggy.Extensions.Jwt;
 using Doggy.Learning.Auth.Domain.Entities;
+using Doggy.Learning.Auth.Domain.FaultInfos;
 using Doggy.Learning.Auth.Domain.Interfaces;
 
 namespace Doggy.Learning.Auth.Business.Services
@@ -41,7 +42,7 @@ namespace Doggy.Learning.Auth.Business.Services
         public async Task<Group> FindByNameAsync(string name)
         {
             var group = await _groupRepo.FindByNameAsync(name);
-            if (group == null) throw new ArgumentNullException(nameof(group));
+            if (group == null) throw new AccountNameNotFound(name);
 
             return group;
         }

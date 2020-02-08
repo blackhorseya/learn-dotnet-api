@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Doggy.Extensions.HttpResponse;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -29,7 +31,7 @@ namespace Doggy.Learning.WebService.Models
         }
     }
     
-    public class  AuthenticateResponseExample : IExamplesProvider<IDictionary<string, string>>
+    public class AuthenticateResponseExample : IExamplesProvider<IDictionary<string, string>>
     {
         public IDictionary<string, string> GetExamples()
         {
@@ -38,6 +40,22 @@ namespace Doggy.Learning.WebService.Models
                 {
                     "token",
                     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InBscyIsIm5hbWVpZCI6IjEiLCJyb2xlIjoiYWRtaW4iLCJuYmYiOjE1ODA5MDI5MTMsImV4cCI6MTU4MDkxMDExMywiaWF0IjoxNTgwOTAyOTEzfQ.hv2hmW494K87URlgcBNTYSBZsAEc5QWXWWtnwDZa8UE"
+                }
+            };
+        }
+    }
+
+    public class AuthenticateAuccountNameNotFoundExample : IExamplesProvider<GenericHttpResponse>
+    {
+        public GenericHttpResponse GetExamples()
+        {
+            return new GenericHttpResponse
+            {
+                Code = StatusCodes.Status404NotFound,
+                Ok = false,
+                Data = new
+                {
+                    ErrorMessage = "AccountName [123] not found",
                 }
             };
         }

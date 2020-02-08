@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Doggy.Extensions.HttpResponse;
 using Doggy.Learning.Auth.Domain.Filters;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure;
@@ -30,8 +31,10 @@ namespace Doggy.Learning.WebService.Controllers
         [AllowAnonymous]
         [HttpPost("authenticate")]
         [SwaggerRequestExample(typeof(AuthenticateRequestBody), typeof(AuthenticateRequestBodyExample))]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IDictionary<string, string>))]
+        [SwaggerResponse(StatusCodes.Status200OK, type: typeof(IDictionary<string, string>))]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, type: typeof(GenericHttpResponse))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(AuthenticateAuccountNameNotFoundExample))]
         public async Task<IActionResult> Authenticate([FromQuery] RequestParametersBase param,
             [FromBody] AuthenticateRequestBody requestBody)
         {
