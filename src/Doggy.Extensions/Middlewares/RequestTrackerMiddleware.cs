@@ -37,6 +37,9 @@ namespace Doggy.Extensions.Middlewares
 
         private static JObject RemoveSensitivityWord(JObject jObject)
         {
+            if (jObject == null)
+                return null;
+            
             if (jObject.ContainsKey("password"))
                 jObject.Remove("password");
 
