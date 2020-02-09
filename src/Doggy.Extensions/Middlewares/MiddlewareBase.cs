@@ -33,14 +33,12 @@ namespace Doggy.Extensions.Middlewares
                 // handle response
                 await HandleResponse(context);
             }
-            catch
+            finally
             {
                 // copy fake stream to original response stream
                 ms.Position = 0;
                 await ms.CopyToAsync(originalRespStream);
                 context.Response.Body = originalRespStream;
-
-                throw;
             }
         }
 

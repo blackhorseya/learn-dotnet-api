@@ -4,11 +4,11 @@ using Doggy.Extensions.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Doggy.Extensions.Middlewares
 {
-    public class 
-        RequestTrackerMiddleware : MiddlewareBase
+    public class RequestTrackerMiddleware : MiddlewareBase
     {
         private readonly ILogWrapper _logger;
 
@@ -21,16 +21,26 @@ namespace Doggy.Extensions.Middlewares
         protected override async Task HandleResponse(HttpContext context)
         {
             var args = new List<(string, object)>();
-            
+
             var reqBody = await ReadRequestBody(context);
+            var reqObj = RemoveSensitivityWord((JObject) JsonConvert.DeserializeObject(reqBody));
             if (!string.IsNullOrEmpty(reqBody))
-                args.Add((Logger.Constants.Properties.RequestBody, JsonConvert.DeserializeObject(reqBody)));
-            
+                args.Add((Logger.Constants.Properties.RequestBody, reqObj));
+
             var respBody = await ReadResponseBody(context);
+            var resObj = RemoveSensitivityWord((JObject) JsonConvert.DeserializeObject(respBody));
             if (!string.IsNullOrEmpty(respBody))
-                args.Add((Logger.Constants.Properties.ResponseBody, JsonConvert.DeserializeObject(respBody)));
-            
+                args.Add((Logger.Constants.Properties.ResponseBody, resObj));
+
             _logger.TraceRequest(args.ToArray());
+        }
+
+        private static JObject RemoveSensitivityWord(JObject jObject)
+        {
+            if (jObject.ContainsKey("password"))
+                jObject.Remove("password");
+
+            return jObject;
         }
     }
 

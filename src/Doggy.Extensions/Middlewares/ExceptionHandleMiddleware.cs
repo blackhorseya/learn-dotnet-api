@@ -26,6 +26,10 @@ namespace Doggy.Extensions.Middlewares
             {
                 await base.Invoke(context);
             }
+            catch (FaultInfoBase ex)
+            {
+                await HandlingExceptionAsync(context, ex);
+            }
             catch (Exception ex)
             {
                 _logger.Exception(ex);
@@ -52,15 +56,6 @@ namespace Doggy.Extensions.Middlewares
                 {
                     faultInfoBase.ErrorCode,
                     faultInfoBase.ErrorMessage,
-                };
-            }
-
-            if (ex is MissingFieldException missingFieldException)
-            {
-                res.Code = StatusCodes.Status400BadRequest;
-                res.Data = new
-                {
-                    ErrorMassage = missingFieldException.Message,
                 };
             }
             

@@ -147,8 +147,8 @@ namespace Doggy.Learning.WebService
 
             #region Middleware
 
-            app.UseExceptionHandleMiddleware();
             app.UseRequestTrackerMiddleware();
+            app.UseExceptionHandleMiddleware();
 
             #endregion
 
