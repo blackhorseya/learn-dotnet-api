@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,22 +17,30 @@ namespace Doggy.Extensions.Middlewares
 
         public virtual async Task Invoke(HttpContext context)
         {
-            await HandleRequest(context);
-
             // temp original response stream
+            // replace the original response stream with a readable and writable stream
             var originalRespStream = context.Response.Body;
-            using (var ms = new MemoryStream())
+            await using var ms = new MemoryStream();
+            context.Response.Body = ms;
+
+            try
             {
-                // replace the original response stream with a readable and writable stream
-                context.Response.Body = ms;
+                // handle request
+                await HandleRequest(context);
+
                 await Next(context);
 
+                // handle response
                 await HandleResponse(context);
-
+            }
+            catch
+            {
                 // copy fake stream to original response stream
                 ms.Position = 0;
                 await ms.CopyToAsync(originalRespStream);
                 context.Response.Body = originalRespStream;
+
+                throw;
             }
         }
 
@@ -44,7 +53,7 @@ namespace Doggy.Extensions.Middlewares
         protected virtual async Task HandleResponse(HttpContext context)
         {
         }
-
+        
         protected async Task<string> ReadRequestBody(HttpContext context)
         {
             string bodyText;

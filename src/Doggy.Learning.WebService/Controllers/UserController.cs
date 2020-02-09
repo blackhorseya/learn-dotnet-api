@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Doggy.Extensions.HttpResponse;
+using Doggy.Extensions.Http.Response;
 using Doggy.Learning.Auth.Domain.Filters;
 using Doggy.Learning.Auth.Domain.Interfaces;
 using Doggy.Learning.Infrastructure;
