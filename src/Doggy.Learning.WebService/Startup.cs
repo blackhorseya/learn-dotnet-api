@@ -52,8 +52,13 @@ namespace Doggy.Learning.WebService
             services.AddCustomSwagger();
             services.ConfigureSwaggerGen(c =>  c.ExampleFilters());
 
+            // request example
             services.AddSwaggerExamplesFromAssemblyOf<AuthenticateRequestBodyExample>();
-            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateResponseExample>();
+            
+            // response example
+            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateSuccessResponseExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateAccountNameNotFoundExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<GetUserByNameSuccessResponseExample>();
 
             #endregion
 
@@ -62,6 +67,7 @@ namespace Doggy.Learning.WebService
                 {
                     options.Filters.Add<RequestHeaderFilter>();
                     options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+                    options.Filters.Add<FormatResultFilter>();
                 })
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(typeof(Startup));

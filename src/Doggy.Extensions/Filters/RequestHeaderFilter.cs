@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Doggy.Extensions.Configuration.Request;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ namespace Doggy.Extensions.Filters
     public class RequestHeaderFilter : IAuthorizationFilter, IOperationFilter
     {
         private readonly List<string> _headers;
-        
+
         public RequestHeaderFilter(IConfiguration configuration)
         {
             _headers = configuration.TryGetRequiredHeaders();
@@ -24,7 +25,12 @@ namespace Doggy.Extensions.Filters
             var request = context.HttpContext.Request;
             foreach (var header in _headers.Where(header => !request.Headers.ContainsKey(header)))
             {
-                context.Result = new BadRequestResult();
+                var result = new ObjectResult(new
+                {
+                    ErrorMessage = $"The [{header}] field is required in request headers",
+                });
+                result.StatusCode = StatusCodes.Status400BadRequest;
+                context.Result = result;
                 break;
             }
         }
