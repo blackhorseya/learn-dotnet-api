@@ -31,10 +31,10 @@ namespace Doggy.Learning.WebService.Controllers
         [AllowAnonymous]
         [HttpPost("authenticate")]
         [SwaggerRequestExample(typeof(AuthenticateRequestBody), typeof(AuthenticateRequestBodyExample))]
-        [SwaggerResponse(StatusCodes.Status200OK, type: typeof(IDictionary<string, string>))]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
+        [SwaggerResponse(StatusCodes.Status200OK, type: typeof(GenericHttpResponse))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateSuccessResponseExample))]
         [SwaggerResponse(StatusCodes.Status404NotFound, type: typeof(GenericHttpResponse))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(AuthenticateAuccountNameNotFoundExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(AuthenticateAccountNameNotFoundExample))]
         public async Task<IActionResult> Authenticate([FromQuery] RequestParametersBase param,
             [FromBody] AuthenticateRequestBody requestBody)
         {
@@ -42,7 +42,6 @@ namespace Doggy.Learning.WebService.Controllers
             if (string.IsNullOrEmpty(token))
                 return BadRequest(new {message = "Username or password is incorrect"});
 
-            // todo: refactor return type
             return Ok(new Dictionary<string, string>
             {
                 {"token", token}
@@ -51,7 +50,7 @@ namespace Doggy.Learning.WebService.Controllers
 
         [HttpGet]
         [Rbac(ModuleConstants.Management)]
-        public async Task<IActionResult> Get([FromQuery] RequestParametersBase param)
+        public async Task<IActionResult> GetAllUser([FromQuery] RequestParametersBase param)
         {
             var groups = await _userService.FindAllAsync();
             var res = _mapper.Map<List<UserResponse>>(groups);
@@ -60,7 +59,11 @@ namespace Doggy.Learning.WebService.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<IActionResult> Get([FromQuery] GetUserRequestParameters param)
+        [SwaggerResponse(StatusCodes.Status200OK, type: typeof(GenericHttpResponse))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetUserByNameSuccessResponseExample))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, type: typeof(GenericHttpResponse))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(AuthenticateAccountNameNotFoundExample))]
+        public async Task<IActionResult> GetUserByName([FromQuery] GetUserRequestParameters param)
         {
             if (param.Name != User.Identity.Name && !User.IsInRole("admin"))
                 return Forbid();

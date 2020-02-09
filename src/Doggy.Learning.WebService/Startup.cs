@@ -52,8 +52,13 @@ namespace Doggy.Learning.WebService
             services.AddCustomSwagger();
             services.ConfigureSwaggerGen(c =>  c.ExampleFilters());
 
+            // request example
             services.AddSwaggerExamplesFromAssemblyOf<AuthenticateRequestBodyExample>();
-            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateResponseExample>();
+            
+            // response example
+            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateSuccessResponseExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<AuthenticateAccountNameNotFoundExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<GetUserByNameSuccessResponseExample>();
 
             #endregion
 
