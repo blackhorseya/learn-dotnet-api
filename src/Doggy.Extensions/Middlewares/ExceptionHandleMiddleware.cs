@@ -26,28 +26,17 @@ namespace Doggy.Extensions.Middlewares
             {
                 await base.Invoke(context);
             }
-            catch (FaultInfoBase ex)
-            {
-                await HandlingExceptionAsync(context, ex);
-            }
             catch (Exception ex)
             {
-                _logger.Exception(ex);
+                if (!(ex is FaultInfoBase))
+                    _logger.Exception(ex);
                 await HandlingExceptionAsync(context, ex);
             }
         }
 
         private async Task HandlingExceptionAsync(HttpContext context, Exception ex)
         {
-            var res = new GenericHttpResponse
-            {
-                Code = StatusCodes.Status500InternalServerError,
-                Ok = false,
-                Data = new
-                {
-                    ErrorMessage = "Unknown error",
-                }
-            };
+            var res = new GenericHttpResponse();
 
             if (ex is FaultInfoBase faultInfoBase)
             {

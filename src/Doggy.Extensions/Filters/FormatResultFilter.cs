@@ -1,5 +1,6 @@
 using System;
 using Doggy.Extensions.Http.Response;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -19,7 +20,7 @@ namespace Doggy.Extensions.Filters
             var res = new GenericHttpResponse()
             {
                 Code = result.StatusCode ?? 0,
-                Ok = true,
+                Ok = result.StatusCode < StatusCodes.Status400BadRequest,
                 Data = result.Value
             };
 

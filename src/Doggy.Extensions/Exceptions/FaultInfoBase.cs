@@ -5,7 +5,12 @@ namespace Doggy.Extensions.Exceptions
 {
     public abstract class FaultInfoBase : Exception
     {
-        public abstract HttpStatusCode HttpStatusCode { get; set; }
+        protected FaultInfoBase(HttpStatusCode httpStatusCode)
+        {
+            HttpStatusCode = httpStatusCode;
+        }
+
+        public HttpStatusCode HttpStatusCode { get; set; }
         public string ErrorCode { get; }
         public string ErrorMessage { get; set; }
     }
