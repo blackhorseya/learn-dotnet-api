@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Doggy.Learning.Auth.Domain\Doggy.Learning.Auth.Domain.csproj" />
     <ProjectReference Include="..\Doggy.Learning.Auth.Business\Doggy.Learning.Auth.Business.csproj" />
+    <ProjectReference Include="..\Doggy.Learning.Infrastructure\Doggy.Learning.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
