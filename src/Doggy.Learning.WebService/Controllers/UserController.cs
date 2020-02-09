@@ -43,7 +43,7 @@ namespace Doggy.Learning.WebService.Controllers
                 return BadRequest(new {message = "Username or password is incorrect"});
 
             // todo: refactor return type
-            return new ObjectResult(new Dictionary<string, string>
+            return Ok(new Dictionary<string, string>
             {
                 {"token", token}
             });
@@ -51,7 +51,7 @@ namespace Doggy.Learning.WebService.Controllers
 
         [HttpGet]
         [Rbac(ModuleConstants.Management)]
-        public async Task<ActionResult<IEnumerable<UserResponse>>> Get([FromQuery] RequestParametersBase param)
+        public async Task<IActionResult> Get([FromQuery] RequestParametersBase param)
         {
             var groups = await _userService.FindAllAsync();
             var res = _mapper.Map<List<UserResponse>>(groups);
@@ -60,7 +60,7 @@ namespace Doggy.Learning.WebService.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<ActionResult<UserResponse>> Get([FromQuery] GetUserRequestParameters param)
+        public async Task<IActionResult> Get([FromQuery] GetUserRequestParameters param)
         {
             if (param.Name != User.Identity.Name && !User.IsInRole("admin"))
                 return Forbid();

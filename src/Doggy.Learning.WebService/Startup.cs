@@ -62,6 +62,7 @@ namespace Doggy.Learning.WebService
                 {
                     options.Filters.Add<RequestHeaderFilter>();
                     options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+                    options.Filters.Add<FormatResultFilter>();
                 })
                 .AddJsonOptions(options => options.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(typeof(Startup));
