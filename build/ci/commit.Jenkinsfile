@@ -1,48 +1,66 @@
 #!/usr/bin/env groovy
 
+@Library("jenkins-shared-libraries") _
+
 pipeline {
-  agent {
-    kubernetes {
-      yaml """
+    agent {
+        kubernetes {
+            yaml """
 apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: dotnet-sdk
-    image: blackhorseya/dotnet-builder:3.1-alpine
-    command:
-    - cat
-    tty: true
+    - name: builder
+      image: blackhorseya/dotnet-builder:3.1-alpine
+      command: ['cat']
+      tty: true
 """
+        }
     }
-  }
-  stages {
-    stage('Prepare') {
-      steps {
-        echo "branch name: ${env.GIT_BRANCH}"
-        sh 'ls -al'
-        sh 'printenv'
-      }
+    stages {
+        stage('Prepare') {
+            steps {
+                echo "branch name: ${env.GIT_BRANCH}"
+                sh label: "print all environment variable", script: "printenv | sort"
+                
+                container('builder') {
+                    script {
+                        dotnet.printInfo()
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                container('builder') {
+                    script {
+                        dotnet.build(useCache: true)
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                container('builder') {
+                    script {
+                        dotnet.test(genReport: false, genCoverage: false)
+                    }
+                }
+            }
+        }
     }
 
-    stage('Build') {
-      steps {
-        container('dotnet-sdk') {
-          sh '''
-          dotnet build -c Release -o ./publish
-          '''
-        }
-      }
-    }
+    post {
+        always {
+            script {
+                def changes = common.getChanges()
+                echo "${changes}"
 
-    stage('Test') {
-      steps {
-        container('dotnet-sdk') {
-          sh '''
-          dotnet test
-          '''
+                def authorEmail = common.getAuthorEmail()
+                echo "${authorEmail}"
+            }
         }
-      }
     }
-  }
 }

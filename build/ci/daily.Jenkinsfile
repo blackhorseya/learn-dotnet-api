@@ -1,26 +1,38 @@
 #!/usr/bin/env groovy
 
+@Library("jenkins-shared-libraries") _
+
 pipeline {
-  environment {
-    PATH = "/root/.dotnet/tools:$PATH"
-    APP_NAME = 'learn-dotnet'
-    VERSION = "1.0.0"
-    FULL_VERSION = "${VERSION}.${BUILD_ID}"
-    KUBE_NS = "default"
-    DOCKERHUB = credentials('docker-hub-credential')
-    IMAGE_NAME = "${DOCKERHUB_USR}/${APP_NAME}"
-    SONARQUBE_TOKEN = credentials('sonarqube-token')
-    SONARQUBE_HOST_URL = "https://sonar.blackhorseya.com"
-    KUBE_CONFIG_FILE = credentials('kube-config')
-  }
-  agent {
-    kubernetes {
-      yaml """
+    environment {
+        // application settings
+        APP_NAME = "learn-dotnet"
+        VERSION = "1.0.1"
+        FULL_VERSION = "${VERSION}.${BUILD_ID}"
+        IMAGE_NAME = "${DOCKER_REGISTRY_CRED_USR}/${APP_NAME}"
+
+        // docker credentials
+        DOCKER_REGISTRY_URL = "https://registry.hub.docker.com/"
+        DOCKER_REGISTRY_ID = "docker-hub-credential"
+        DOCKER_REGISTRY_CRED = credentials("${DOCKER_REGISTRY_ID}")
+
+        // sonarqube settings
+        SONARQUBE_HOST_URL = "https://sonar.blackhorseya.com"
+        SONARQUBE_TOKEN = credentials('sonarqube-token')
+
+        // kubernetes settings
+        KUBE_CONFIG_ID = "kube-config"
+
+        // git settings
+        GIT_CREDENTIAL_ID = "github-ssh"
+    }
+    agent {
+        kubernetes {
+            yaml """
 apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: dotnet-builder
+  - name: builder
     image: blackhorseya/dotnet-builder:3.1-alpine
     command: ['cat']
     tty: true
@@ -32,7 +44,7 @@ spec:
     - name: dockersock
       mountPath: /var/run/docker.sock
   - name: helm
-    image: alpine/helm:3.0.1
+    image: alpine/helm:3.1.0
     command: ['cat']
     tty: true
   volumes:
@@ -40,157 +52,123 @@ spec:
     hostPath:
       path: /var/run/docker.sock
 """
+        }
     }
-  }
-  stages {
-    stage('Prepare') {
-      steps {
-        echo """
-Perform ${JOB_NAME} for
-Repo: ${env.GIT_URL}
-Branch: ${env.GIT_BRANCH}
-Application: ${APP_NAME}:${FULL_VERSION}
-"""
-        sh 'printenv'
-        
-        container('dotnet-builder') {
-            sh 'dotnet --info'
-        }
-        
-        container('docker') {
-            sh 'docker info'
-            sh 'docker version'
-        }
-
-        container('helm') {
-            sh 'helm version'
-            sh 'mkdir -p /root/.kube/ && cp $KUBE_CONFIG_FILE /root/.kube/config'
-        }
-      }
-    }
-
-    stage('Build') {
-      steps {
-        container('dotnet-builder') {
-            sh """
-            dotnet sonarscanner begin /k:\"${APP_NAME}\" \
-            /v:${FULL_VERSION} \
-            /d:sonar.host.url=${SONARQUBE_HOST_URL} \
-            /d:sonar.login=${SONARQUBE_TOKEN} \
-            /d:sonar.exclusions=**/*.js,**/*.ts,**/*.css,bin/**/*,obj/**/*,wwwroot/**/*,ClientApp/**/* \
-            /d:sonar.cs.opencover.reportsPaths=${PWD}/coverage/coverage.opencover.xml \
-            /d:sonar.coverage.exclusions=**/Entities/**/*,test/**/* \
-            /d:sonar.cs.vstest.reportsPaths=${PWD}/TestResults/report.trx
-            """
-            sh 'dotnet build -c Release -o ./publish'
-        }
-      }
-    }
-
-    stage('Test') {
-      steps {
-        container('dotnet-builder') {
-          echo "perform dotnet test and generate test and coverage results"
-          sh '''
-          dotnet test /p:CollectCoverage=true \
-          /p:CoverletOutputFormat=opencover \
-          /p:CoverletOutput=$(pwd)/coverage/ \
-          --logger trx \
-          -r ./TestResults/report.trx \
-          -o ./publish \
-          --no-build --no-restore
-          '''
-        }
-      }
-    }
-
-    stage('Static Code Analysis') {
-      steps {
-        container('dotnet-builder') {
-          sh "dotnet sonarscanner end /d:sonar.login=${SONARQUBE_TOKEN}"
-        }
-      }
-    }
-
-    stage('Build and push docker image') {
-        steps {
-            container('docker') {
+    stages {
+        stage('Prepare') {
+            steps {
+                script {
+                    DEPLOY_TO = common.getTargetEnv("${GIT_BRANCH}")
+                }
                 echo """
-IMAGE_NAME: ${IMAGE_NAME}
+branch name: ${env.GIT_BRANCH}
+target env: ${DEPLOY_TO}
 """
+                sh label: "print all environment variable", script: "printenv | sort"
 
-                sh "docker build -t ${IMAGE_NAME}:latest -f Dockerfile --network host ."
-                sh "docker login --username ${DOCKERHUB_USR} --password ${DOCKERHUB_PSW}"
-                sh """
-                docker push ${IMAGE_NAME}:latest && \
-                docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${FULL_VERSION} && \
-                docker push ${IMAGE_NAME}:${FULL_VERSION}
-                """
-                sh "docker images --filter=reference='${IMAGE_NAME}:*'"
+                container('builder') {
+                    script {
+                        dotnet.printInfo()
+                    }
+                }
+
+                container('docker') {
+                    sh label: "print docker info and version", script: """
+                    docker info
+                    docker version
+                    """
+                }
+
+                container('helm') {
+                    script {
+                        deploy.helmInfo()
+                        deploy.copyConfig("${KUBE_CONFIG_ID}")
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                container('builder') {
+                    script {
+                        dotnet.scannerBegin(
+                            projectKey: "${APP_NAME}",
+                            version: "${FULL_VERSION}",
+                            hostUrl: "${SONARQUBE_HOST_URL}",
+                            token: "${SONARQUBE_TOKEN}"
+                        )
+                        dotnet.build(useCache: true)
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                container('builder') {
+                    script {
+                        dotnet.test(
+                            genCoverage: true,
+                            genReport: true
+                        )
+                    }
+                }
+            }
+        }
+
+        stage('Static Code Analysis') {
+            steps {
+                container('builder') {
+                    script {
+                        dotnet.scannerEnd(
+                            token: "${SONARQUBE_TOKEN}"
+                        )
+                    }
+                }
+            }
+        }
+
+        stage('Build and push docker image') {
+            steps {
+                container('docker') {
+                    script {
+                        docker.withRegistry("${DOCKER_REGISTRY_URL}", "${DOCKER_REGISTRY_ID}") {
+                            def image = docker.build("${IMAGE_NAME}:${FULL_VERSION}", "--network host .")
+                            image.push()
+                            image.push('latest')
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                container('helm') {
+                    script {
+                        deploy.helmListWithEnv("${DEPLOY_TO}")
+                        deploy.helmUpgrade(
+                            appName: "${APP_NAME}",
+                            version: "${FULL_VERSION}",
+                            imageName: "${IMAGE_NAME}",
+                            env: "${DEPLOY_TO}"
+                        )
+                    }
+                }
+
+                script {
+                    common.gitAddTag("${GIT_CREDENTIAL_ID}", "${DEPLOY_TO}", "${VERSION}")
+                }
             }
         }
     }
 
-    stage('Deploy') {
-      steps {
-          container('helm') {
-              echo "deploy to dev for latest version"
-              sh "helm upgrade --install dev-${APP_NAME} --namespace=${KUBE_NS} deploy/helm -f deploy/config/dev/values.yaml --set image.tag=${FULL_VERSION} --wait --atomic"
-          }
-          sshagent(['github-ssh']) {
-              sh """
-              git tag --delete v${VERSION}-alpha | exit 0 && git push --delete origin v${VERSION}-alpha | exit 0
-              git tag v${VERSION}-alpha && git push --tags
-              """
-          }
-      }
-    }
-  }
-
-  post {
-      always {
-        script {
-          def (x, repo) = "${GIT_URL}".split(':')
-          def prefixIcon = currentBuild.currentResult == 'SUCCESS' ? ':white_check_mark:' : ':x:'
-          def blocks = [
-            [
-              "type": "section",
-              "text": [
-                "type": "mrkdwn",
-                "text": "${prefixIcon} *<${BUILD_URL}|${JOB_NAME} #${FULL_VERSION}>*"
-              ]
-            ],
-            [
-              "type": "divider"
-            ],
-            [
-              "type": "section",
-              "fields": [
-                [
-                  "type": "mrkdwn",
-                  "text": "*:star: Build Status:*\n${currentBuild.currentResult}"
-                ],
-                [
-                  "type": "mrkdwn",
-                  "text": "*:star: Elapsed:*\n${currentBuild.durationString}"
-                ],
-                [
-                  "type": "mrkdwn",
-                  "text": "*:star: Job:*\n<${JOB_URL}|${JOB_NAME}>"
-                ],
-                [
-                  "type": "mrkdwn",
-                  "text": "*:star: Project:*\n<https://github.com/${repo}|Github>"
-                ],
-                [
-                  "type": "mrkdwn",
-                  "text": "*:star: Build Image:*\n<https://hub.docker.com/r/${DOCKERHUB_USR}/${APP_NAME}/tags|Docker hub>"
-                ]
-              ]
-            ]
-          ]
-          slackSend(blocks: blocks)
+    post {
+        always {
+            script {
+                notify.sendSlack()
+            }
         }
-      }
-  }
+    }
 }
